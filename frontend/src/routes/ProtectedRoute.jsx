@@ -31,9 +31,9 @@ export const ProtectedRoute = ({ children, allowedRoles }) => {
     const defaultRedirect = {
       [ROLES.CIDADAO]: '/cidadao/dashboard',
       [ROLES.OPERADOR]: '/operador/dashboard',
-      [ROLES.COORDENADOR]: '/coordenador/dashboard',
+      [ROLES.COORDENADOR]: '/operador/dashboard',
       [ROLES.AGENTE]: '/agente/missoes',
-      [ROLES.ADMIN]: '/admin/utilizadores',
+      [ROLES.ADMIN]: '/operador/utilizadores',
     }[user.role] || '/login';
 
     return <Navigate to={defaultRedirect} replace />;
