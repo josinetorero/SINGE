@@ -3,13 +3,16 @@ import Icon from '../../components/common/Icon';
 import { Card, Button, StatusBadge, EmptyState, inputCls } from '../../components/common/CommonComponents';
 import { CIDADAO_OCORRENCIAS } from '../../data/mockData';
 
-export function CidadaoMinhasOcorrencias({ setPage, setSelectedOc }) {
+export function CidadaoMinhasOcorrencias({ setPage, setSelectedOc, ocorrencias }) {
   const [q, setQ] = useState('');
   const [tipo, setTipo] = useState('');
   const [estado, setEstado] = useState('');
 
-  const filtered = CIDADAO_OCORRENCIAS.filter(o =>
-    (!q || o.ref.toLowerCase().includes(q.toLowerCase()) || o.titulo.toLowerCase().includes(q.toLowerCase())) &&
+  const lista = ocorrencias || CIDADAO_OCORRENCIAS;
+
+  const filtered = lista.filter(o =>
+    (!q || (o.ref && o.ref.toLowerCase().includes(q.toLowerCase())) || 
+           (o.titulo && o.titulo.toLowerCase().includes(q.toLowerCase()))) &&
     (!tipo || o.tipo === tipo) && 
     (!estado || o.estado === estado)
   );
@@ -37,11 +40,11 @@ export function CidadaoMinhasOcorrencias({ setPage, setSelectedOc }) {
           </div>
           <select value={tipo} onChange={e => setTipo(e.target.value)} className={inputCls}>
             <option value="">Todos os tipos</option>
-            {[...new Set(CIDADAO_OCORRENCIAS.map(o => o.tipo))].map(t => <option key={t}>{t}</option>)}
+            {[...new Set(lista.map(o => o.tipo).filter(Boolean))].map(t => <option key={t} value={t}>{t}</option>)}
           </select>
           <select value={estado} onChange={e => setEstado(e.target.value)} className={inputCls}>
             <option value="">Todos os estados</option>
-            {[...new Set(CIDADAO_OCORRENCIAS.map(o => o.estado))].map(s => <option key={s}>{s}</option>)}
+            {[...new Set(lista.map(o => o.estado).filter(Boolean))].map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
       </Card>
@@ -70,13 +73,20 @@ export function CidadaoMinhasOcorrencias({ setPage, setSelectedOc }) {
                 </thead>
                 <tbody className="divide-y divide-bd dark:divide-dborder">
                   {filtered.map(o => (
-                    <tr key={o.ref} className="hover:bg-light dark:hover:bg-dsidebar/30 transition-colors">
-                      <td className="px-4 py-3 font-medium text-ink dark:text-dink whitespace-nowrap">{o.ref}</td>
+                    <tr 
+                      key={o.ref || o.id} 
+                      data-testid="cid-oc-item" 
+                      data-ref={o.ref || o.id} 
+                      className="hover:bg-light dark:hover:bg-dsidebar/30 transition-colors"
+                    >
+                      <td className="px-4 py-3 font-medium text-ink dark:text-dink whitespace-nowrap">{o.ref || o.id}</td>
                       <td className="px-4 py-3 text-ink dark:text-dink">{o.tipo}</td>
-                      <td className="px-4 py-3 text-muted dark:text-dmuted whitespace-nowrap">{o.distrito}, {o.provincia}</td>
+                      <td className="px-4 py-3 text-muted dark:text-dmuted whitespace-nowrap">
+                        {o.distrito ? `${o.distrito}, ${o.provincia}` : (o.localidade || 'Moçambique')}
+                      </td>
                       <td className="px-4 py-3 text-muted dark:text-dmuted whitespace-nowrap">{o.data}</td>
                       <td className="px-4 py-3"><StatusBadge s={o.estado} /></td>
-                      <td className="px-4 py-3 text-muted dark:text-dmuted whitespace-nowrap">{o.ultimaActualizacao}</td>
+                      <td className="px-4 py-3 text-muted dark:text-dmuted whitespace-nowrap">{o.ultimaActualizacao || o.data}</td>
                       <td className="px-4 py-3 text-right">
                         <button 
                           onClick={() => { setSelectedOc(o); setPage('detalhe-cidadao'); }} 
@@ -96,13 +106,20 @@ export function CidadaoMinhasOcorrencias({ setPage, setSelectedOc }) {
           {/* Cards para Dispositivos Móveis */}
           <div className="md:hidden space-y-3">
             {filtered.map(o => (
-              <Card key={o.ref} className="p-4">
+              <Card 
+                key={o.ref || o.id} 
+                data-testid="cid-oc-item" 
+                data-ref={o.ref || o.id} 
+                className="p-4"
+              >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-muted dark:text-dmuted">{o.ref}</span>
+                  <span className="text-xs font-medium text-muted dark:text-dmuted">{o.ref || o.id}</span>
                   <StatusBadge s={o.estado} />
                 </div>
                 <p className="text-sm font-medium text-ink dark:text-dink">{o.titulo}</p>
-                <p className="text-xs text-muted dark:text-dmuted">{o.tipo} · {o.distrito}, {o.provincia}</p>
+                <p className="text-xs text-muted dark:text-dmuted">
+                  {o.tipo} · {o.distrito ? `${o.distrito}, ${o.provincia}` : (o.localidade || 'Moçambique')}
+                </p>
                 <p className="text-xs text-muted dark:text-dmuted mt-1">Comunicada em {o.data}</p>
                 <button 
                   onClick={() => { setSelectedOc(o); setPage('detalhe-cidadao'); }} 

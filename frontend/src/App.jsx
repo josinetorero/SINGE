@@ -34,6 +34,9 @@ import { ActualizarEstado } from './pages/agente/ActualizarEstado';
 
 // Administrador Pages
 import { GestaoUtilizadores } from './pages/admin/GestaoUtilizadores';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { ParametrosSistema } from './pages/admin/ParametrosSistema';
+import { AuditoriaLogs } from './pages/admin/AuditoriaLogs';
 
 // Shared Pages
 import { Relatorios } from './pages/shared/Relatorios';
@@ -55,6 +58,7 @@ import { CidadaoNotificacoes } from './pages/cidadao/CidadaoNotificacoes';
 
 // Mock Data
 import { OCORRENCIAS, USERS } from './data/mockData';
+import { ocorrenciasService } from './services/ocorrenciasService';
 
 function MainApp() {
   const [role, setRole] = useState(null);
@@ -64,7 +68,34 @@ function MainApp() {
   const [selEq, setSelEq] = useState(null);
   const [selAlerta, setSelAlerta] = useState(null);
   const [selInfo, setSelInfo] = useState(null);
-  const [ocorrencias, setOcorrencias] = useState(OCORRENCIAS);
+    const [ocorrencias, setOcorrencias] = useState(OCORRENCIAS);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    ocorrenciasService.listar()
+      .then(res => {
+        if (isMounted && Array.isArray(res) && res.length > 0) {
+          setOcorrencias(res);
+        }
+      })
+      .catch(() => {});
+    return () => { isMounted = false; };
+  }, []);
+
+  const handleOcorrenciaCriada = (nova) => {
+    if (nova) {
+      setOcorrencias(prev => [nova, ...prev]);
+    }
+  };
+
+  // [RF03] Guarda de rotas mínima por perfil RBAC
+  const ALLOWED_PAGES_BY_ROLE = {
+    cidadao: ['dashboard', 'comunicar', 'minhas-ocorrencias', 'detalhe-cidadao', 'alertas', 'detalhe-alerta', 'informacoes', 'detalhe-info', 'notificacoes', 'perfil'],
+    operador: ['dashboard', 'ocorrencias', 'registar', 'detalhe-oc', 'notificacoes', 'relatorios', 'definicoes'],
+    coordenador: ['dashboard', 'ocorrencias', 'detalhe-oc', 'prioridades', 'equipas', 'detalhe-eq', 'missoes', 'detalhe-ms-coord', 'relatorios', 'historico', 'notificacoes', 'definicoes'],
+    agente: ['dashboard', 'missoes', 'detalhe-ms', 'atualizar', 'notificacoes', 'definicoes'],
+    administrador: ['dashboard', 'utilizadores', 'parametros', 'auditoria', 'definicoes'],
+  };
 
   const handleLogin = (r) => {
     setRole(r);
@@ -89,13 +120,17 @@ function MainApp() {
   // CIDADÃO — Layout Superior (Top Nav)
   if (role === 'cidadao') {
     const renderCitizen = () => {
+    // [RF03] Guarda de rotas para cidadão
+    if (!ALLOWED_PAGES_BY_ROLE.cidadao.includes(page)) {
+      return <EmptyState icon="Lock" title="Acesso não autorizado" description="O perfil Cidadão não tem autorização para aceder a esta funcionalidade." />;
+    }
       switch (page) {
         case 'dashboard':
           return <CidadaoDashboard setPage={setPage} setSelectedOc={setSelOc} />;
         case 'comunicar':
-          return <CidadaoComunicar setPage={setPage} />;
+          return <CidadaoComunicar setPage={setPage} onOcorrenciaCriada={handleOcorrenciaCriada} />;
         case 'minhas-ocorrencias':
-          return <CidadaoMinhasOcorrencias setPage={setPage} setSelectedOc={setSelOc} />;
+          return <CidadaoMinhasOcorrencias setPage={setPage} setSelectedOc={setSelOc} ocorrencias={ocorrencias} />;
         case 'detalhe-cidadao':
           return <CidadaoDetalheOcorrencia o={selOc} setPage={setPage} />;
         case 'alertas':
@@ -124,6 +159,10 @@ function MainApp() {
 
   // INSTITUCIONAL — Layout Lateral (Sidebar Navy)
   const renderInstitutional = () => {
+    // [RF03] Guarda de rotas institucionais
+    if (role && ALLOWED_PAGES_BY_ROLE[role] && !ALLOWED_PAGES_BY_ROLE[role].includes(page)) {
+      return <EmptyState icon="Lock" title="Acesso não autorizado" description="O seu perfil não tem autorização para aceder a esta funcionalidade." />;
+    }
     if (role === 'operador') {
       switch (page) {
         case 'dashboard':
@@ -131,7 +170,7 @@ function MainApp() {
         case 'ocorrencias':
           return <OperadorOcorrencias setPage={setPage} setSelected={setSelOc} ocorrencias={ocorrencias} />;
         case 'registar':
-          return <RegistarOcorrencia setPage={setPage} />;
+          return <RegistarOcorrencia setPage={setPage} onOcorrenciaCriada={handleOcorrenciaCriada} />;
         case 'detalhe-oc':
           return <DetalheOcorrencia o={selOc} setPage={setPage} role={role} />;
         case 'notificacoes':
@@ -195,30 +234,16 @@ function MainApp() {
       }
     }
 
-    if (role === 'administrador') {
+        if (role === 'administrador') {
       switch (page) {
         case 'dashboard':
-          return <CoordenadorDashboard setPage={setPage} ocorrencias={ocorrencias} />;
-        case 'ocorrencias':
-          return <OperadorOcorrencias setPage={setPage} setSelected={setSelOc} ocorrencias={ocorrencias} />;
-        case 'detalhe-oc':
-          return <DetalheOcorrencia o={selOc} setPage={setPage} role={role} />;
-        case 'missoes':
-          return <Missoes setPage={setPage} setSelectedMissao={setSelMs} />;
-        case 'detalhe-ms-coord':
-          return <DetalheMissaoCoord m={selMs} setPage={setPage} />;
-        case 'equipas':
-          return <Equipas setPage={setPage} setSelectedEquipa={setSelEq} />;
-        case 'detalhe-eq':
-          return <DetalheEquipa e={selEq} setPage={setPage} />;
+          return <AdminDashboard setPage={setPage} />;
         case 'utilizadores':
           return <GestaoUtilizadores />;
-        case 'relatorios':
-          return <Relatorios />;
-        case 'historico':
-          return <HistoricoSistema />;
-        case 'notificacoes':
-          return <Notificacoes />;
+        case 'parametros':
+          return <ParametrosSistema />;
+        case 'auditoria':
+          return <AuditoriaLogs />;
         case 'definicoes':
           return <Definicoes user={USERS[role]} role={role} />;
         default:

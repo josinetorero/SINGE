@@ -125,14 +125,22 @@ export const ConfirmModal = ({ open, onClose, onConfirm, title, description, dan
   );
 };
 
-export const Field = ({ label, children, required, hint, error }) => (
-  <label className="block">
+export const Field = ({ label, children, required, hint, error, errorTestId, htmlFor }) => (
+  <label className="block" htmlFor={htmlFor}>
     <span className="block text-sm font-medium text-ink dark:text-dink mb-1.5">
       {label}{required && <span className="text-red-500 ml-0.5">*</span>}
     </span>
     {children}
     {hint && <span className="block text-xs text-muted dark:text-dmuted mt-1">{hint}</span>}
-    {error && <span className="block text-xs text-red-600 mt-1">{error}</span>}
+    {error && (
+      <span 
+        role="alert" 
+        data-testid={errorTestId || (htmlFor ? `${htmlFor}-error` : undefined)} 
+        className="block text-xs text-red-600 mt-1"
+      >
+        {error}
+      </span>
+    )}
   </label>
 );
 

@@ -23,6 +23,8 @@ export const ToastProvider = ({ children }) => {
         {toasts.map(t => (
           <div 
             key={t.id} 
+            data-testid="toast"
+            data-type={t.type}
             className={`px-4 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2 min-w-[260px] pointer-events-auto animate-in fade-in slide-in-from-top-2 duration-200 ${
               t.type === 'success' ? 'bg-green-600 text-white' :
               t.type === 'error' ? 'bg-red-600 text-white' : 'bg-navy text-white'

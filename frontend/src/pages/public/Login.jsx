@@ -439,6 +439,7 @@ export function Login({ onLogin }) {
                 <button
                   key={p.id}
                   type="button"
+                  data-testid={`login-role-${p.id}`}
                   onClick={() => handleQuickLogin(p.id)}
                   className="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-medium transition-all hover:scale-105 active:scale-95 border border-white/15"
                   title={`Entrar como ${p.name} (${p.role})`}
