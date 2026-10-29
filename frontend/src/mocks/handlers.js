@@ -3,7 +3,7 @@
  * Simula a API Laravel com Sanctum quando VITE_USE_MOCK=true.
  */
 import { http, HttpResponse } from 'msw';
-import { OCORRENCIAS, UTILIZADORES } from '../data/mockData';
+import { OCORRENCIAS, UTILIZADORES } from '../data/mockData.js';
 
 // Estado em memória clonado dos dados de demonstração
 let mockOcorrencias = [
