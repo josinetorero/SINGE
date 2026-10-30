@@ -109,3 +109,49 @@ export const ROLE_LABEL = {
   administrador: 'Administrador',
   cidadao: 'Cidadão'
 };
+
+
+export const FATORES_PRIORIDADE = [
+  { id: 1, codigo: 'FP-01', nome: 'Vidas em Risco Imediato', peso: 0.35, descricao: 'Pessoas isoladas, em risco de afogamento, desabamento ou sem acesso a socorro', ativo: true },
+  { id: 2, codigo: 'FP-02', nome: 'Alerta Meteorológico / Vulnerabilidade Territorial', peso: 0.25, descricao: 'Avisos vermelhos do INAM ou áreas com histórico de cheias e desastres graves', ativo: true },
+  { id: 3, codigo: 'FP-03', nome: 'Infraestruturas Críticas Afectadas', peso: 0.20, descricao: 'Cortes de energia hospitalar, vias de evacuação cortadas, pontes colapsadas', ativo: true },
+  { id: 4, codigo: 'FP-04', nome: 'Volume de População Potencialmente Atingida', peso: 0.10, descricao: 'Estimativa de agregados familiares ou comunidades em perímetro de impacto', ativo: true },
+  { id: 5, codigo: 'FP-05', nome: 'Capacidade Local de Auto-Resposta', peso: 0.10, descricao: 'Meios municipais ou comunitários insuficientes para controlar o evento', ativo: true },
+];
+
+export const TIPOS_OCORRENCIA = [
+  { id: 1, nome: 'Ciclone', descricao: 'Ventos destrutivos, tempestades tropicais costeiras e depressões marítimas', prioridadePadrao: 'Crítico', icone: 'Wind' },
+  { id: 2, nome: 'Cheia', descricao: 'Inundações fluviais, galgamento de bacias hidrográficas e inundações urbanas', prioridadePadrao: 'Alto', icone: 'Waves' },
+  { id: 3, nome: 'Surto de doença', descricao: 'Epidemias graves de cólera, malária pós-inundação e contaminações de água', prioridadePadrao: 'Alto', icone: 'AlertTriangle' },
+  { id: 4, nome: 'Incêndio', descricao: 'Incêndios florestais sazonais e incêndios em aglomerados habitacionais', prioridadePadrao: 'Médio', icone: 'Flame' },
+  { id: 5, nome: 'Deslizamento', descricao: 'Deslizamentos de terras e instabilidade de encostas após chuvas fortes', prioridadePadrao: 'Médio', icone: 'AlertOctagon' },
+  { id: 6, nome: 'Seca', descricao: 'Estiagem extrema, quebra de safras e escassez severa de água potável', prioridadePadrao: 'Alto', icone: 'Sun' },
+  { id: 7, nome: 'Acidente', descricao: 'Acidentes rodoviários de grande escala, marítimos ou ferroviários', prioridadePadrao: 'Baixo', icone: 'Activity' },
+];
+
+export const TIPOS_EQUIPA = [
+  { id: 1, nome: 'Busca e Salvamento', sigla: 'SAR', descricao: 'Equipas náuticas e terrestres para resgate de vítimas em perigo iminente', equipasAtivas: 2 },
+  { id: 2, nome: 'Saúde Pública e Triagem', sigla: 'MED', descricao: 'Postos médicos avançados, brigadas de cólera e apoio pré-hospitalar', equipasAtivas: 1 },
+  { id: 3, nome: 'Logística e Ajuda Humanitária', sigla: 'LOG', descricao: 'Centros de acolhimento, distribuição de água, tendas e kits alimentares', equipasAtivas: 1 },
+  { id: 4, nome: 'Protecção Civil e Bombeiros', sigla: 'SENSAP', descricao: 'Combate a fogos, corte de árvores caídas e apoio a evacuações gerais', equipasAtivas: 1 },
+  { id: 5, nome: 'Avaliação Rápida de Danos', sigla: 'ARD', descricao: 'Levantamento estrutural pós-impacto e estimativa de necessidades', equipasAtivas: 1 },
+];
+
+export const AUDITORIA_LOGS = [
+  { id: 'LOG-8842', data: '15/01/2025 10:14', utilizador: 'Pedro Chirindza', perfil: 'Administrador', acao: 'Ajuste de Parâmetro', detalhe: 'Peso do fator FP-01 (Vidas em Risco) atualizado para 0.35', ip: '192.168.10.12', status: 'Sucesso' },
+  { id: 'LOG-8841', data: '15/01/2025 09:30', utilizador: 'Carlos Mabunda', perfil: 'Coordenador', acao: 'Validação de Gravidade', detalhe: 'Prioridade da OC-2025-0142 confirmada com sucesso (Crítico)', ip: '192.168.10.15', status: 'Sucesso' },
+  { id: 'LOG-8840', data: '15/01/2025 08:35', utilizador: 'Ana Sitoe', perfil: 'Operador', acao: 'Registo de Ocorrência', detalhe: 'Criada nova ocorrência OC-2025-0142 (Ciclone)', ip: '192.168.10.24', status: 'Sucesso' },
+  { id: 'LOG-8839', data: '15/01/2025 08:02', utilizador: 'Ana Sitoe', perfil: 'Operador', acao: 'Autenticação', detalhe: 'Sessão iniciada via Sanctum Token no navegador', ip: '192.168.10.24', status: 'Sucesso' },
+  { id: 'LOG-8838', data: '14/01/2025 23:11', utilizador: 'desconhecido', perfil: 'Não identificado', acao: 'Tentativa Falhada', detalhe: '3 tentativas falhadas com utilizador root@singe.gov.mz', ip: '41.220.89.14', status: 'Alerta' },
+  { id: 'LOG-8837', data: '14/01/2025 17:40', utilizador: 'Pedro Chirindza', perfil: 'Administrador', acao: 'Criação de Conta', detalhe: 'Conta US-008 criada para administrador com privilégios RBAC', ip: '192.168.10.12', status: 'Sucesso' },
+  { id: 'LOG-8836', data: '14/01/2025 14:15', utilizador: 'Pedro Chirindza', perfil: 'Administrador', acao: 'Ativação de Módulo', detalhe: 'Serviço de cálculo heurístico de prioridades validado', ip: '192.168.10.12', status: 'Sucesso' },
+];
+
+export const INFRA_STATUS = {
+  backendApi: { status: 'Operacional', latencia: '38ms', versao: 'Laravel 11.x (Sanctum)' },
+  database: { status: 'Conectado', conexoes: 12, motor: 'MySQL 8.0' },
+  storage: { status: 'Saudável', usado: '28.4 GB', total: '200 GB' },
+  iaEngine: { status: 'Operacional', modelo: 'Heurística Multicritério v1.0' },
+  sessoesAtivas: 14,
+  requisicoesHoje: '14.892',
+};

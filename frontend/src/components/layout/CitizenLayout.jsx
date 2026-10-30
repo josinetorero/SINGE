@@ -36,6 +36,7 @@ export function CitizenLayout({ user, page, setPage, onLogout, children }) {
             {nav.map(n => (
               <button 
                 key={n.id} 
+                data-testid={`nav-${n.id}`}
                 onClick={() => setPage(n.id)}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   page === n.id 

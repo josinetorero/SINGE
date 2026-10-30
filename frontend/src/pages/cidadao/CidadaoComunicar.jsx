@@ -4,15 +4,33 @@ import { Card, Button, Field, inputCls } from '../../components/common/CommonCom
 import { LocationPicker } from '../../components/map/MapComponents';
 import { USERS } from '../../data/mockData';
 import { useToast } from '../../contexts/ToastContext';
+import { validarOcorrencia } from '../../validation/ocorrencia';
+import { ocorrenciasService } from '../../services/ocorrenciasService';
+import { NetworkError, ValidationError } from '../../services/api';
 
-export function CidadaoComunicar({ setPage }) {
+export function CidadaoComunicar({ setPage, onCreated, onOcorrenciaCriada }) {
   const toast = useToast();
-  const [sec, setSec] = useState('A');
-  const [tipo, setTipo] = useState('');
-  const [confirmed, setConfirmed] = useState(false);
+  const [sec, setSec] = useState('A'); // Exatamente 5 passos: A, B, C, D, E [RF16]
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(null);
-  const [loc, setLoc] = useState({ lat: null, lng: null });
   const [geoLoading, setGeoLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  // Campos controlados preservados entre secções
+  const [form, setForm] = useState({
+    tipo: '',
+    titulo: '',
+    descricao: '',
+    data: new Date().toISOString().slice(0, 16),
+    provincia: 'Sofala',
+    distrito: '',
+    localidade: '',
+    endereco: '',
+    lat: '',
+    lng: '',
+    descricaoEvidencias: '',
+    confirmed: false,
+  });
 
   const tipos = [
     { id: 'Cheia', label: 'Cheias ou inundações', icon: 'Waves', color: 'text-blue-600 dark:text-blue-300' },
@@ -24,6 +42,7 @@ export function CidadaoComunicar({ setPage }) {
     { id: 'Outra situação', label: 'Outra situação', icon: 'AlertCircle', color: 'text-slate-600 dark:text-slate-300' },
   ];
 
+  // [RF16] Exatamente 5 passos estruturados
   const secs = [
     { id: 'A', label: 'Tipo' },
     { id: 'B', label: 'Descrição' },
@@ -31,6 +50,37 @@ export function CidadaoComunicar({ setPage }) {
     { id: 'D', label: 'Evidências' },
     { id: 'E', label: 'Confirmação' }
   ];
+
+  const handleChange = (field, value) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+    if (fieldErrors[field] || fieldErrors.localizacao || fieldErrors.coordenadas) {
+      setFieldErrors(prev => {
+        const next = { ...prev };
+        delete next[field];
+        if (field === 'lat' || field === 'lng' || field === 'provincia' || field === 'distrito') {
+          delete next.localizacao;
+          delete next.coordenadas;
+        }
+        return next;
+      });
+    }
+  };
+
+  const handleLocationPick = (coords) => {
+    setForm(prev => ({
+      ...prev,
+      lat: coords.lat !== null && coords.lat !== undefined ? String(coords.lat) : '',
+      lng: coords.lng !== null && coords.lng !== undefined ? String(coords.lng) : '',
+    }));
+    if (fieldErrors.localizacao || fieldErrors.coordenadas) {
+      setFieldErrors(prev => {
+        const next = { ...prev };
+        delete next.localizacao;
+        delete next.coordenadas;
+        return next;
+      });
+    }
+  };
 
   const usarLocalizacao = () => {
     if (!navigator.geolocation) { 
@@ -40,7 +90,11 @@ export function CidadaoComunicar({ setPage }) {
     setGeoLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setForm(prev => ({
+          ...prev,
+          lat: String(pos.coords.latitude),
+          lng: String(pos.coords.longitude),
+        }));
         setGeoLoading(false);
         toast.success('Localização GPS obtida com sucesso.');
       },
@@ -52,23 +106,86 @@ export function CidadaoComunicar({ setPage }) {
     );
   };
 
-  const handleSubmit = () => {
-    if (!tipo) { 
-      toast.error('Seleccione o tipo de ocorrência.'); 
-      setSec('A');
-      return; 
+  const handleSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (isSubmitting) return;
+
+    // 1) Validação das regras puras
+    const errors = validarOcorrencia(form);
+
+    // Validação da confirmação de veracidade no passo E
+    if (!form.confirmed) {
+      errors.confirm = 'Confirme que as informações comunicadas são verdadeiras.';
     }
-    if (!confirmed) { 
-      toast.error('Confirme que as informações são exactas.'); 
-      return; 
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+
+      // Foca/vai para a primeira secção com erro [Requisito 2]
+      if (errors.tipo) {
+        setSec('A');
+      } else if (errors.titulo || errors.descricao || errors.data) {
+        setSec('B');
+      } else if (errors.localizacao || errors.provincia || errors.distrito || errors.coordenadas) {
+        setSec('C');
+      } else if (errors.confirm) {
+        setSec('E');
+      }
+      toast.error('Corrija os campos assinalados antes de submeter.');
+      return;
     }
-    const ref = 'CID-2025-' + String(Math.floor(Math.random() * 9000) + 1000);
-    setSubmitted({
-      ref,
-      data: new Date().toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-      tipo,
-      local: `${loc.lat?.toFixed(4) || '—'}, ${loc.lng?.toFixed(4) || '—'}`
-    });
+
+    setIsSubmitting(true);
+    setFieldErrors({});
+
+    try {
+      const payload = {
+        tipo: form.tipo,
+        titulo: form.titulo.trim(),
+        descricao: form.descricao.trim(),
+        data: form.data,
+        provincia: form.provincia,
+        distrito: form.distrito.trim(),
+        localidade: form.localidade.trim(),
+        endereco: form.endereco.trim(),
+        lat: form.lat !== '' ? Number(form.lat) : null,
+        lng: form.lng !== '' ? Number(form.lng) : null,
+        descricaoEvidencias: form.descricaoEvidencias.trim(),
+        fonte: 'Cidadão',
+      };
+
+      // [CU01] Estado e identificador vêm da API, o frontend não os inventa
+      const respostaApi = await ocorrenciasService.registar(payload);
+      
+      toast.success('Ocorrência comunicada com sucesso.');
+      setSubmitted({
+        ref: respostaApi?.ref || respostaApi?.id || 'OC-2025-NOVA',
+        data: respostaApi?.data || new Date().toLocaleString('pt-PT'),
+        tipo: respostaApi?.tipo || form.tipo,
+        local: form.distrito ? `${form.distrito}, ${form.provincia}` : (form.lat ? `${form.lat}, ${form.lng}` : 'Moçambique')
+      });
+
+      if (typeof onOcorrenciaCriada === 'function') {
+        onOcorrenciaCriada(respostaApi);
+      } else if (typeof onCreated === 'function') {
+        onCreated(respostaApi);
+      }
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        setFieldErrors(err.errors);
+        if (err.errors.tipo) setSec('A');
+        else if (err.errors.titulo || err.errors.descricao) setSec('B');
+        else if (err.errors.localizacao || err.errors.provincia || err.errors.distrito) setSec('C');
+        toast.error(err.message || 'Verifique os dados assinalados.');
+      } else if (err instanceof NetworkError || err.isNetworkError) {
+        // [RNF12] Preserva formulário e exibe mensagem oficial
+        toast.error('Sem ligação. Os seus dados foram mantidos.');
+      } else {
+        toast.error(err.message || 'Erro ao submeter ocorrência.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -96,6 +213,10 @@ export function CidadaoComunicar({ setPage }) {
               <span className="text-muted dark:text-dmuted">Tipo de emergência</span>
               <span className="text-ink dark:text-dink font-medium">{submitted.tipo}</span>
             </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted dark:text-dmuted">Prioridade</span>
+              <span className="text-amber-600 dark:text-amber-400 font-semibold">Por avaliar</span>
+            </div>
           </div>
 
           <div className="mt-4 p-3 rounded-lg border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20 text-xs text-amber-900 dark:text-amber-100 text-left">
@@ -104,7 +225,27 @@ export function CidadaoComunicar({ setPage }) {
 
           <div className="mt-6 flex gap-2 justify-center flex-wrap">
             <Button icon="Eye" onClick={() => setPage('minhas-ocorrencias')}>Acompanhar ocorrência</Button>
-            <Button variant="secondary" onClick={() => { setSubmitted(null); setTipo(''); setConfirmed(false); setSec('A'); setLoc({ lat: null, lng: null }); }}>
+            <Button 
+              variant="secondary" 
+              onClick={() => { 
+                setSubmitted(null); 
+                setForm({
+                  tipo: '',
+                  titulo: '',
+                  descricao: '',
+                  data: new Date().toISOString().slice(0, 16),
+                  provincia: 'Sofala',
+                  distrito: '',
+                  localidade: '',
+                  endereco: '',
+                  lat: '',
+                  lng: '',
+                  descricaoEvidencias: '',
+                  confirmed: false,
+                });
+                setSec('A'); 
+              }}
+            >
               Nova comunicação
             </Button>
           </div>
@@ -112,6 +253,11 @@ export function CidadaoComunicar({ setPage }) {
       </div>
     );
   }
+
+  const locObj = {
+    lat: form.lat !== '' ? Number(form.lat) : null,
+    lng: form.lng !== '' ? Number(form.lng) : null,
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
@@ -126,6 +272,7 @@ export function CidadaoComunicar({ setPage }) {
         {secs.map((s, i) => (
           <button 
             key={s.id} 
+            type="button"
             onClick={() => setSec(s.id)}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
               sec === s.id 
@@ -145,15 +292,23 @@ export function CidadaoComunicar({ setPage }) {
 
       <Card className="p-6 space-y-5">
         {sec === 'A' && (
-          <Field label="Seleccione o tipo de ocorrência" required hint="Escolha a opção que melhor descreve a situação observada.">
+          <Field 
+            label="Seleccione o tipo de ocorrência" 
+            required 
+            hint="Escolha a opção que melhor descreve a situação observada."
+            error={fieldErrors.tipo}
+            errorTestId="tipo-error"
+          >
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
               {tipos.map(t => (
                 <button 
                   key={t.id} 
                   type="button"
-                  onClick={() => setTipo(t.id)}
+                  data-testid={`cid-tipo-${t.id}`}
+                  onClick={() => handleChange('tipo', t.id)}
+                  aria-pressed={form.tipo === t.id}
                   className={`p-3 rounded-lg border-2 flex flex-col items-start gap-1.5 transition-all text-left ${
-                    tipo === t.id 
+                    form.tipo === t.id 
                       ? 'border-brand bg-lblue/50 dark:bg-dblue/10 shadow-sm' 
                       : 'border-bd dark:border-dborder hover:border-brand/50'
                   }`}
@@ -168,32 +323,135 @@ export function CidadaoComunicar({ setPage }) {
 
         {sec === 'B' && (
           <>
-            <Field label="Título / descrição resumida" required hint="Ex: Água a subir na rua principal">
-              <input className={inputCls} placeholder="Resumo curto da situação" />
+            <Field 
+              label="Título / descrição resumida" 
+              required 
+              hint="Ex: Água a subir na rua principal (entre 5 e 100 caracteres)"
+              htmlFor="cid-titulo"
+              error={fieldErrors.titulo}
+              errorTestId="titulo-error"
+            >
+              <input 
+                id="cid-titulo"
+                data-testid="cid-titulo"
+                value={form.titulo}
+                onChange={e => handleChange('titulo', e.target.value)}
+                aria-invalid={Boolean(fieldErrors.titulo)}
+                className={inputCls} 
+                placeholder="Resumo curto da situação" 
+              />
             </Field>
-            <Field label="Descrição detalhada" required hint="Inclua o que observou, extensão aparente, se há pessoas em risco, etc.">
-              <textarea rows={5} className={inputCls} placeholder="Descreva a situação com o máximo de detalhe possível..." />
+
+            <Field 
+              label="Descrição detalhada" 
+              required 
+              hint="Inclua o que observou, extensão aparente, se há pessoas em risco, etc. (10 a 1000 caracteres)"
+              htmlFor="cid-descricao"
+              error={fieldErrors.descricao}
+              errorTestId="descricao-error"
+            >
+              <textarea 
+                rows={5} 
+                id="cid-descricao"
+                data-testid="cid-descricao"
+                value={form.descricao}
+                onChange={e => handleChange('descricao', e.target.value)}
+                aria-invalid={Boolean(fieldErrors.descricao)}
+                className={inputCls} 
+                placeholder="Descreva a situação com o máximo de detalhe possível..." 
+              />
             </Field>
-            <Field label="Data e hora em que observou a situação" required>
-              <input type="datetime-local" className={inputCls} defaultValue={new Date().toISOString().slice(0, 16)} />
+
+            <Field 
+              label="Data e hora em que observou a situação" 
+              htmlFor="cid-data"
+              error={fieldErrors.data}
+              errorTestId="data-error"
+            >
+              <input 
+                type="datetime-local" 
+                id="cid-data"
+                data-testid="cid-data"
+                value={form.data}
+                onChange={e => handleChange('data', e.target.value)}
+                aria-invalid={Boolean(fieldErrors.data)}
+                className={inputCls} 
+              />
             </Field>
           </>
         )}
 
         {sec === 'C' && (
           <>
+            {fieldErrors.localizacao && (
+              <div 
+                role="alert" 
+                data-testid="localizacao-error"
+                className="p-3 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-xs text-red-600 dark:text-red-300 font-medium"
+              >
+                {fieldErrors.localizacao}
+              </div>
+            )}
+
             <div className="grid md:grid-cols-2 gap-4">
-              <Field label="Província" required>
-                <select className={inputCls}>
+              <Field 
+                label="Província" 
+                required 
+                htmlFor="cid-provincia"
+                error={fieldErrors.provincia}
+                errorTestId="provincia-error"
+              >
+                <select 
+                  id="cid-provincia"
+                  data-testid="cid-provincia"
+                  value={form.provincia}
+                  onChange={e => handleChange('provincia', e.target.value)}
+                  className={inputCls}
+                >
                   {['Maputo', 'Gaza', 'Inhambane', 'Sofala', 'Manica', 'Tete', 'Zambézia', 'Nampula', 'Niassa', 'Cabo Delgado'].map(p => (
-                    <option key={p}>{p}</option>
+                    <option key={p} value={p}>{p}</option>
                   ))}
                 </select>
               </Field>
-              <Field label="Distrito" required><input className={inputCls} placeholder="Ex: Beira" /></Field>
-              <Field label="Localidade"><input className={inputCls} placeholder="Ex: Macurungo" /></Field>
-              <Field label="Endereço / ponto de referência">
-                <input className={inputCls} placeholder="Ex: Próximo à escola primária" />
+
+              <Field 
+                label="Distrito" 
+                required 
+                htmlFor="cid-distrito"
+                error={fieldErrors.distrito}
+                errorTestId="distrito-error"
+              >
+                <input 
+                  id="cid-distrito"
+                  data-testid="cid-distrito"
+                  value={form.distrito}
+                  onChange={e => handleChange('distrito', e.target.value)}
+                  aria-invalid={Boolean(fieldErrors.distrito)}
+                  className={inputCls} 
+                  placeholder="Ex: Beira" 
+                />
+              </Field>
+
+              <Field label="Localidade" htmlFor="cid-localidade">
+                <input 
+                  id="cid-localidade"
+                  data-testid="cid-localidade"
+                  value={form.localidade}
+                  onChange={e => handleChange('localidade', e.target.value)}
+                  className={inputCls} 
+                  placeholder="Ex: Macurungo" 
+                />
+              </Field>
+
+              <Field label="Endereço / ponto de referência" htmlFor="cid-endereco">
+                <input 
+                  id="cid-endereco"
+                  data-testid="cid-endereco"
+                  value={form.endereco}
+                  onChange={e => handleChange('endereco', e.target.value)}
+                  className={inputCls} 
+                  placeholder="Ex: Próximo à escola primária" 
+                />
               </Field>
             </div>
             
@@ -201,9 +459,9 @@ export function CidadaoComunicar({ setPage }) {
               <Button variant="secondary" icon="Navigation" onClick={usarLocalizacao} disabled={geoLoading}>
                 {geoLoading ? 'A obter coordenadas...' : 'Usar a minha localização GPS'}
               </Button>
-              {loc.lat && (
+              {form.lat && form.lng && (
                 <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 font-medium">
-                  <Icon name="CheckCircle" size={14} /> Localização obtida ({loc.lat.toFixed(4)}, {loc.lng.toFixed(4)})
+                  <Icon name="CheckCircle" size={14} /> Localização obtida ({Number(form.lat).toFixed(4)}, {Number(form.lng).toFixed(4)})
                 </span>
               )}
             </div>
@@ -213,16 +471,41 @@ export function CidadaoComunicar({ setPage }) {
 
             <Field label="Localização no mapa" hint="Clique no mapa para marcar a localização exacta (opcional)">
               <div className="h-64 rounded-xl overflow-hidden mt-2">
-                <LocationPicker value={loc} onChange={setLoc} height={256} />
+                <LocationPicker 
+                  value={locObj} 
+                  onChange={handleLocationPick} 
+                  height={256} 
+                />
               </div>
             </Field>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <Field label="Latitude">
-                <input type="number" step="0.0001" value={loc.lat || ''} onChange={e => setLoc({ ...loc, lat: parseFloat(e.target.value) })} className={inputCls} />
+              <Field 
+                label="Latitude" 
+                htmlFor="cid-lat"
+                error={fieldErrors.coordenadas}
+                errorTestId="coordenadas-error"
+              >
+                <input 
+                  type="number" 
+                  step="0.0001" 
+                  id="cid-lat"
+                  data-testid="cid-lat"
+                  value={form.lat} 
+                  onChange={e => handleChange('lat', e.target.value)} 
+                  className={inputCls} 
+                />
               </Field>
-              <Field label="Longitude">
-                <input type="number" step="0.0001" value={loc.lng || ''} onChange={e => setLoc({ ...loc, lng: parseFloat(e.target.value) })} className={inputCls} />
+              <Field label="Longitude" htmlFor="cid-lng">
+                <input 
+                  type="number" 
+                  step="0.0001" 
+                  id="cid-lng"
+                  data-testid="cid-lng"
+                  value={form.lng} 
+                  onChange={e => handleChange('lng', e.target.value)} 
+                  className={inputCls} 
+                />
               </Field>
             </div>
           </>
@@ -238,12 +521,19 @@ export function CidadaoComunicar({ setPage }) {
               </div>
             </Field>
             <Field label="Documentos" hint="Ex: PDF, DOC. Tamanho máximo: 10MB.">
-              <button type="button" className="flex items-center gap-2 px-3 py-2 border border-bd dark:border-dborder rounded-lg text-sm text-ink dark:text-dink hover:bg-light dark:hover:bg-dsidebar transition-colors">
+              <button type="button" className="flex items-center gap-2 px-3 py-2 border border-bd dark:border-bd dark:border-dborder rounded-lg text-sm text-ink dark:text-dink hover:bg-light dark:hover:bg-dsidebar transition-colors">
                 <Icon name="Paperclip" size={16} /> Anexar documento
               </button>
             </Field>
-            <Field label="Descrição das evidências anexadas">
-              <textarea rows={3} className={inputCls} placeholder="Notas adicionais sobre as imagens ou vídeos..." />
+            <Field label="Descrição das evidências anexadas" htmlFor="cid-evidencias">
+              <textarea 
+                rows={3} 
+                id="cid-evidencias"
+                value={form.descricaoEvidencias}
+                onChange={e => handleChange('descricaoEvidencias', e.target.value)}
+                className={inputCls} 
+                placeholder="Notas adicionais sobre as imagens ou vídeos..." 
+              />
             </Field>
           </>
         )}
@@ -258,39 +548,71 @@ export function CidadaoComunicar({ setPage }) {
               <div className="flex items-center gap-2 text-sm text-ink dark:text-dink">
                 <Icon name="Phone" size={14} className="text-muted dark:text-dmuted" /> {USERS.cidadao.telefone}
               </div>
-              <p className="text-xs text-muted dark:text-dmuted mt-1">
-                Estes dados são usados apenas para acompanhar a sua comunicação e não serão publicados.
-              </p>
             </div>
 
-            <label className="flex items-start gap-3 p-4 rounded-lg border-2 border-bd dark:border-dborder cursor-pointer hover:bg-light dark:hover:bg-dsidebar/30 transition-colors">
-              <input 
-                type="checkbox" 
-                checked={confirmed} 
-                onChange={e => setConfirmed(e.target.checked)} 
-                className="mt-1 w-4 h-4 text-brand rounded" 
-              />
-              <span className="text-sm text-ink dark:text-dink">
-                Confirmo que as informações fornecidas são tão exactas quanto possível, dentro do que consegui observar em segurança.
-              </span>
-            </label>
+            <div className="space-y-3 pt-2">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  id="cid-confirm"
+                  data-testid="cid-confirm"
+                  checked={form.confirmed}
+                  onChange={e => handleChange('confirmed', e.target.checked)}
+                  aria-invalid={Boolean(fieldErrors.confirm)}
+                  className="mt-1 w-4 h-4 rounded border-bd text-brand focus:ring-brand" 
+                />
+                <span className="text-sm text-ink dark:text-dink">
+                  Confirmo que as informações prestadas são verdadeiras e correspondem ao que observei pessoalmente.
+                </span>
+              </label>
+              {fieldErrors.confirm && (
+                <p role="alert" data-testid="confirm-error" className="text-xs text-red-600 ml-7">
+                  {fieldErrors.confirm}
+                </p>
+              )}
+            </div>
 
-            <div className="p-3 rounded-lg border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20 text-xs text-amber-900 dark:text-amber-100">
-              <strong>Nota:</strong> A submissão será sujeita a análise. Este envio <strong>não representa confirmação</strong> de que uma equipa foi mobilizada.
+            <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs text-muted dark:text-dmuted">
+              <strong>Aviso legal:</strong> A comunicação falsa de emergências é punível por lei nos termos do Código Penal de Moçambique.
             </div>
           </>
         )}
       </Card>
 
-      <div className="flex flex-wrap gap-2 justify-between items-center">
-        <Button variant="secondary" onClick={() => setPage('dashboard')}>Cancelar</Button>
+      <div className="flex gap-2 justify-between">
+        <Button 
+          variant="secondary" 
+          disabled={sec === 'A' || isSubmitting} 
+          onClick={() => {
+            const idx = secs.findIndex(s => s.id === sec);
+            if (idx > 0) setSec(secs[idx - 1].id);
+          }}
+        >
+          Anterior
+        </Button>
+
         <div className="flex gap-2">
-          <Button variant="secondary" icon="Save" onClick={() => toast.success('Rascunho guardado localmente.')}>
-            Guardar rascunho
-          </Button>
-          <Button icon="Send" onClick={handleSubmit}>
-            Enviar ocorrência
-          </Button>
+          <Button variant="secondary" onClick={() => setPage('dashboard')} disabled={isSubmitting}>Cancelar</Button>
+          {sec !== 'E' ? (
+            <Button 
+              onClick={() => {
+                const idx = secs.findIndex(s => s.id === sec);
+                if (idx < secs.length - 1) setSec(secs[idx + 1].id);
+              }}
+            >
+              Seguinte
+            </Button>
+          ) : (
+            <Button 
+              icon="CheckCircle" 
+              id="cid-submit"
+              data-testid="cid-submit"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'A submeter...' : 'Submeter ocorrência'}
+            </Button>
+          )}
         </div>
       </div>
     </div>

@@ -5,41 +5,35 @@ import { ROLE_LABEL } from '../../data/mockData';
 
 export const MENUS = {
   operador: [
-    { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
-    { id: 'ocorrencias', label: 'Ocorrências', icon: 'FileText' },
-    { id: 'registar', label: 'Registar ocorrência', icon: 'PlusCircle' },
+    { id: 'dashboard', label: 'Central de Atendimento', icon: 'LayoutDashboard' },
+    { id: 'ocorrencias', label: 'Fila de Triagem', icon: 'FileText' },
+    { id: 'registar', label: 'Registar Ocorrência', icon: 'PlusCircle' },
     { id: 'notificacoes', label: 'Notificações', icon: 'Bell' },
-    { id: 'relatorios', label: 'Relatórios', icon: 'BarChart3' },
     { id: 'definicoes', label: 'Definições', icon: 'Settings' },
   ],
   coordenador: [
-    { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
-    { id: 'ocorrencias', label: 'Ocorrências', icon: 'FileText' },
-    { id: 'prioridades', label: 'Avaliação de prioridades', icon: 'AlertTriangle' },
-    { id: 'equipas', label: 'Equipas', icon: 'Users' },
-    { id: 'missoes', label: 'Missões', icon: 'Target' },
-    { id: 'relatorios', label: 'Relatórios', icon: 'BarChart3' },
-    { id: 'historico', label: 'Histórico operacional', icon: 'History' },
+    { id: 'dashboard', label: 'Sala de Situação', icon: 'LayoutDashboard' },
+    { id: 'prioridades', label: 'Avaliação de Gravidade', icon: 'AlertTriangle' },
+    { id: 'missoes', label: 'Despacho & Missões', icon: 'Target' },
+    { id: 'equipas', label: 'Gestão de Equipas', icon: 'Users' },
+    { id: 'relatorios', label: 'Relatórios Operacionais', icon: 'BarChart3' },
+    { id: 'historico', label: 'Histórico Operacional', icon: 'History' },
     { id: 'notificacoes', label: 'Notificações', icon: 'Bell' },
     { id: 'definicoes', label: 'Definições', icon: 'Settings' },
   ],
   agente: [
-    { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
-    { id: 'missoes', label: 'As minhas missões', icon: 'Target' },
+    { id: 'dashboard', label: 'Painel do Agente', icon: 'LayoutDashboard' },
+    { id: 'missoes', label: 'As Minhas Missões', icon: 'Target' },
     { id: 'atualizar', label: 'Actualizações', icon: 'RefreshCw' },
     { id: 'notificacoes', label: 'Notificações', icon: 'Bell' },
     { id: 'definicoes', label: 'Definições', icon: 'Settings' },
   ],
   administrador: [
-    { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
-    { id: 'ocorrencias', label: 'Ocorrências', icon: 'FileText' },
-    { id: 'missoes', label: 'Missões', icon: 'Target' },
-    { id: 'equipas', label: 'Equipas', icon: 'Users' },
-    { id: 'utilizadores', label: 'Utilizadores', icon: 'UserCog' },
-    { id: 'relatorios', label: 'Relatórios', icon: 'BarChart3' },
-    { id: 'historico', label: 'Histórico', icon: 'History' },
-    { id: 'notificacoes', label: 'Notificações', icon: 'Bell' },
-    { id: 'definicoes', label: 'Definições', icon: 'Settings' },
+    { id: 'dashboard', label: 'Painel do Sistema', icon: 'Server' },
+    { id: 'utilizadores', label: 'Gestão de Utilizadores', icon: 'UserCog' },
+    { id: 'parametros', label: 'Fatores & Parâmetros', icon: 'Sliders' },
+    { id: 'auditoria', label: 'Auditoria & Logs', icon: 'ShieldCheck' },
+    { id: 'definicoes', label: 'Definições Globais', icon: 'Settings' },
   ],
 };
 
@@ -88,6 +82,7 @@ export function InstitutionalLayout({ role, user, page, setPage, onLogout, child
             return (
               <button 
                 key={m.id} 
+                data-testid={`nav-${m.id}`}
                 onClick={() => { setPage(m.id); setMobileOpen(false); }}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors border-l-2 ${
                   active 

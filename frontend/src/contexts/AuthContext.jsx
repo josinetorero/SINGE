@@ -33,6 +33,7 @@ export const DEMO_USERS = {
     phone: '+258 82 234 5678',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
   },
+  /*
   COORDENADOR: {
     id: 'usr-coord-003',
     name: 'Dra. Fátima Mucavele',
@@ -44,6 +45,7 @@ export const DEMO_USERS = {
     phone: '+258 84 345 6789',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
   },
+  */
   AGENTE: {
     id: 'usr-agt-004',
     name: 'Sargento Mateus Sitoe',
@@ -55,6 +57,7 @@ export const DEMO_USERS = {
     phone: '+258 87 456 7890',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
   },
+  /*
   ADMIN: {
     id: 'usr-adm-005',
     name: 'Yúmin Bay',
@@ -66,6 +69,7 @@ export const DEMO_USERS = {
     phone: '+258 84 999 8888',
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
   },
+  */
 };
 
 const AuthContext = createContext();
@@ -76,7 +80,12 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('singe_user');
     if (savedUser) {
       try {
-        return JSON.parse(savedUser);
+        const parsedUser = JSON.parse(savedUser);
+        // Impede que uma sessão antiga mantenha acesso aos perfis desativados.
+        if ([ROLES.COORDENADOR, ROLES.ADMIN].includes(parsedUser.role)) {
+          return DEMO_USERS.OPERADOR;
+        }
+        return parsedUser;
       } catch (e) {
         console.error('Erro ao ler utilizador do localStorage', e);
       }
