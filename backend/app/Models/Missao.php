@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\EstadoMissao;
 
 class Missao extends Model
 {
@@ -12,6 +13,7 @@ class Missao extends Model
     protected $fillable = [
         'ocorrencia_id',
         'equipa_id',
+        'coordenador_id',
         'estado',
         'data_atribuicao',
         'data_inicio',
@@ -22,6 +24,7 @@ class Missao extends Model
     protected function casts(): array
     {
         return [
+            'estado' => EstadoMissao::class,
             'data_atribuicao' => 'datetime',
             'data_inicio' => 'datetime',
             'data_conclusao' => 'datetime',
@@ -36,6 +39,11 @@ class Missao extends Model
         );
     }
 
+    public function coordenador(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'coordenador_id');
+    }
+    
     public function equipa(): BelongsTo
     {
         return $this->belongsTo(

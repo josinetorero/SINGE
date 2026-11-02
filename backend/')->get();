@@ -1,0 +1,39 @@
+[90m= [39m[34;4mIlluminate\Support\Collection[39;24m {#7652
+    [34mall[39m: [
+      {#7651
+        +"[1mid[22m": [35m1[39m,
+        +"[1mnome[22m": [32m"[39m[32mAdministrador[39m[32m"[39m,
+        +"[1mdescricao[22m": [32m"[39m[32mGestão e configuração do sistema.[39m[32m"[39m,
+        +"[1mcreated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+        +"[1mupdated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+      },
+      {#7649
+        +"[1mid[22m": [35m2[39m,
+        +"[1mnome[22m": [32m"[39m[32mOperador[39m[32m"[39m,
+        +"[1mdescricao[22m": [32m"[39m[32mRegisto e acompanhamento de ocorrências.[39m[32m"[39m,
+        +"[1mcreated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+        +"[1mupdated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+      },
+      {#7647
+        +"[1mid[22m": [35m3[39m,
+        +"[1mnome[22m": [32m"[39m[32mCoordenador[39m[32m"[39m,
+        +"[1mdescricao[22m": [32m"[39m[32mCoordenação das equipas e missões.[39m[32m"[39m,
+        +"[1mcreated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+        +"[1mupdated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+      },
+      {#7654
+        +"[1mid[22m": [35m4[39m,
+        +"[1mnome[22m": [32m"[39m[32mAgente[39m[32m"[39m,
+        +"[1mdescricao[22m": [32m"[39m[32mParticipação nas operações de resposta.[39m[32m"[39m,
+        +"[1mcreated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+        +"[1mupdated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+      },
+      {#7631
+        +"[1mid[22m": [35m5[39m,
+        +"[1mnome[22m": [32m"[39m[32mCidadão[39m[32m"[39m,
+        +"[1mdescricao[22m": [32m"[39m[32mRegisto de ocorrências e submissão de evidências.[39m[32m"[39m,
+        +"[1mcreated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+        +"[1mupdated_at[22m": [32m"[39m[32m2026-10-31 16:21:35[39m[32m"[39m,
+      },
+    ],
+  }

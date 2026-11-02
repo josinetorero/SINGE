@@ -48,4 +48,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ocorrencia::class, 'utilizador_id');
     }
+
+    public function evidencias(): HasMany
+    {
+        return $this->hasMany(Evidencia::class, 'utilizador_id');
+    }
+
+    public function avaliacoesPrioridade(): HasMany
+    {
+        return $this->hasMany(AvaliacaoPrioridade::class, 'utilizador_id');
+    }
+
+    public function historicoOcorrencias(): HasMany
+    {
+        return $this->hasMany(HistoricoOcorrencia::class, 'utilizador_id');
+    }
+
+    public function missoesAtribuidas(): HasMany
+    {
+        return $this->hasMany(Missao::class, 'coordenador_id');
+    }
+    
 }

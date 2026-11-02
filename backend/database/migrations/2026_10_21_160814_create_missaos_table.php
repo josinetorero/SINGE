@@ -14,6 +14,12 @@ return new class extends Migration
     Schema::create('missoes', function (Blueprint $table) {
         $table->id();
 
+        $table->foreignId('coordenador_id')
+                ->nullable()
+                ->after('equipa_id')
+                ->constrained('users')
+                ->restrictOnDelete();
+
         $table->foreignId('ocorrencia_id')
             ->constrained('ocorrencias')
             ->restrictOnDelete();
@@ -48,6 +54,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('missaos');
+        Schema::table('missoes', function (Blueprint $table) {
+            $table->dropForeign(['coordenador_id']);
+            $table->dropColumn('coordenador_id');
+        });
     }
 };

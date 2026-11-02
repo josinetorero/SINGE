@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\EstadoEquipa;
 
 class Equipa extends Model
 {
@@ -16,6 +17,13 @@ class Equipa extends Model
         'estado',
         'descricao',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'estado' => EstadoEquipa::class,
+        ];
+    }
 
     public function tipoEquipa(): BelongsTo
     {

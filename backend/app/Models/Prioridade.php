@@ -26,4 +26,9 @@ class Prioridade extends Model
     {
         return $this->hasMany(Ocorrencia::class, 'prioridade_id');
     }
+
+    public function avaliacoes(): HasMany
+    {
+        return $this->hasMany(AvaliacaoPrioridade::class, 'prioridade_id');
+    }
 }

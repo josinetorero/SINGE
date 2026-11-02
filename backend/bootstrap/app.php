@@ -19,6 +19,14 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        $middleware->redirectGuestsTo(function ($request) {
+            return null;
+        });
+
+        $middleware->alias([
+            'perfil' => \App\Http\Middleware\VerificarPerfil::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
