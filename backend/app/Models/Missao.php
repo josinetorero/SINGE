@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\EstadoMissao;
 
 class Missao extends Model
@@ -50,5 +51,10 @@ class Missao extends Model
             Equipa::class,
             'equipa_id'
         );
+    }
+
+    public function notificacoes(): HasMany
+    {
+        return $this->hasMany(Notificacao::class, 'missao_id');
     }
 }

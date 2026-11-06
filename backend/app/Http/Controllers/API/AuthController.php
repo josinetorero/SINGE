@@ -40,7 +40,7 @@ class AuthController extends Controller
         // Gerar token
         $token = $utilizador->createToken('singe-api')->plainTextToken;
 
-        $utilizador->load('perfil');
+        $utilizador->load('perfil', 'localizacao');
 
         return response()->json([
             'message' => 'Registo efectuado com sucesso.',
@@ -58,7 +58,7 @@ class AuthController extends Controller
         ]);
 
         $utilizador = User::where('email', $dados['email'])
-            ->with('perfil')
+            ->with('perfil', 'localizacao')
             ->first();
 
         if (!$utilizador || !Hash::check($dados['password'], $utilizador->password)) {
@@ -90,7 +90,7 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         return response()->json([
-            'user' => $request->user()->load('perfil', 'equipa')
+            'user' => $request->user()->load('perfil', 'equipa', 'localizacao')
         ], 200);
     }
 }

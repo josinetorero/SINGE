@@ -14,6 +14,7 @@ class Ocorrencia extends Model
         'titulo',
         'descricao',
         'localizacao',
+        'localizacao_id',
         'latitude',
         'longitude',
         'tipo_ocorrencia_id',
@@ -57,6 +58,11 @@ class Ocorrencia extends Model
         );
     }
 
+    public function localizacao(): BelongsTo
+    {
+        return $this->belongsTo(Localizacao::class, 'localizacao_id');
+    }
+
     public function missoes(): HasMany
     {
         return $this->hasMany(Missao::class, 'ocorrencia_id');
@@ -78,5 +84,15 @@ class Ocorrencia extends Model
     public function avaliacoesPrioridade(): HasMany
     {
         return $this->hasMany(AvaliacaoPrioridade::class, 'ocorrencia_id');
+    }
+
+    public function validacoes(): HasMany
+    {
+        return $this->hasMany(ValidacaoOcorrencia::class, 'ocorrencia_id');
+    }
+
+    public function notificacoes(): HasMany
+    {
+        return $this->hasMany(Notificacao::class, 'ocorrencia_id');
     }
 }

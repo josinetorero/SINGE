@@ -19,6 +19,7 @@ class User extends Authenticatable
         'password',
         'perfil_id',
         'equipa_id',
+        'localizacao_id',
     ];
 
     protected $hidden = [
@@ -44,6 +45,11 @@ class User extends Authenticatable
         return $this->belongsTo(Equipa::class, 'equipa_id');
     }
 
+    public function localizacao(): BelongsTo
+    {
+        return $this->belongsTo(Localizacao::class, 'localizacao_id');
+    }
+
     public function ocorrenciasRegistadas(): HasMany
     {
         return $this->hasMany(Ocorrencia::class, 'utilizador_id');
@@ -59,6 +65,11 @@ class User extends Authenticatable
         return $this->hasMany(AvaliacaoPrioridade::class, 'utilizador_id');
     }
 
+    public function documentosIdentificacao(): HasMany
+    {
+        return $this->hasMany(DocumentoIdentificacao::class, 'utilizador_id');
+    }
+
     public function historicoOcorrencias(): HasMany
     {
         return $this->hasMany(HistoricoOcorrencia::class, 'utilizador_id');
@@ -68,5 +79,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Missao::class, 'coordenador_id');
     }
-    
+
+    public function notificacoes(): HasMany
+    {
+        return $this->hasMany(Notificacao::class, 'utilizador_id');
+    }
 }
