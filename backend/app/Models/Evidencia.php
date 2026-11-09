@@ -26,11 +26,13 @@ class Evidencia extends Model
         ];
     }
 
+    /** @return BelongsTo<Ocorrencia, $this> */
     public function ocorrencia(): BelongsTo
     {
         return $this->belongsTo(Ocorrencia::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function utilizador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'utilizador_id');

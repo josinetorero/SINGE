@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class HistoricoOcorrencia extends Model
 {
     protected $table = 'historico_ocorrencias';
@@ -18,6 +17,7 @@ class HistoricoOcorrencia extends Model
         'observacoes',
     ];
 
+    /** @return BelongsTo<Ocorrencia, $this> */
     public function ocorrencia(): BelongsTo
     {
         return $this->belongsTo(
@@ -26,6 +26,7 @@ class HistoricoOcorrencia extends Model
         );
     }
 
+    /** @return BelongsTo<User, $this> */
     public function utilizador(): BelongsTo
     {
         return $this->belongsTo(

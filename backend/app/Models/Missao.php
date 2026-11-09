@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\EstadoMissao;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\EstadoMissao;
 
 class Missao extends Model
 {
@@ -32,6 +32,7 @@ class Missao extends Model
         ];
     }
 
+    /** @return BelongsTo<Ocorrencia, $this> */
     public function ocorrencia(): BelongsTo
     {
         return $this->belongsTo(
@@ -40,11 +41,13 @@ class Missao extends Model
         );
     }
 
+    /** @return BelongsTo<User, $this> */
     public function coordenador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'coordenador_id');
     }
-    
+
+    /** @return BelongsTo<Equipa, $this> */
     public function equipa(): BelongsTo
     {
         return $this->belongsTo(
@@ -53,6 +56,7 @@ class Missao extends Model
         );
     }
 
+    /** @return HasMany<Notificacao, $this> */
     public function notificacoes(): HasMany
     {
         return $this->hasMany(Notificacao::class, 'missao_id');

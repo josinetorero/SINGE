@@ -25,21 +25,25 @@ class AvaliacaoPrioridade extends Model
         ];
     }
 
+    /** @return BelongsTo<Ocorrencia, $this> */
     public function ocorrencia(): BelongsTo
     {
         return $this->belongsTo(Ocorrencia::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function utilizador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'utilizador_id');
     }
 
+    /** @return BelongsTo<Prioridade, $this> */
     public function prioridade(): BelongsTo
     {
         return $this->belongsTo(Prioridade::class);
     }
 
+    /** @return HasMany<DetalheAvaliacao, $this> */
     public function detalhes(): HasMany
     {
         return $this->hasMany(DetalheAvaliacao::class, 'avaliacao_prioridade_id');

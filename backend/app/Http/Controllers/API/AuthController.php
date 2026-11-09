@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Perfil;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -12,20 +14,16 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     // Registo público de cidadãos
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $dados = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $dados = $request->validated();
 
         // Procurar o perfil de cidadão
         $perfil = Perfil::where('nome', 'Cidadão')->first();
 
-        if (!$perfil) {
+        if (! $perfil) {
             return response()->json([
-                'message' => 'O perfil de cidadão não está configurado.'
+                'message' => 'O perfil de cidadão não está configurado.',
             ], 500);
         }
 
@@ -50,18 +48,15 @@ class AuthController extends Controller
     }
 
     // Iniciar sessão
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $dados = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        $dados = $request->validated();
 
         $utilizador = User::where('email', $dados['email'])
             ->with('perfil', 'localizacao')
             ->first();
 
-        if (!$utilizador || !Hash::check($dados['password'], $utilizador->password)) {
+        if (! $utilizador || ! Hash::check($dados['password'], $utilizador->password)) {
             throw ValidationException::withMessages([
                 'email' => ['As credenciais introduzidas são inválidas.'],
             ]);
@@ -82,7 +77,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Sessão terminada com sucesso.'
+            'message' => 'Sessão terminada com sucesso.',
         ], 200);
     }
 
@@ -90,7 +85,7 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         return response()->json([
-            'user' => $request->user()->load('perfil', 'equipa', 'localizacao')
+            'user' => $request->user()->load('perfil', 'equipa', 'localizacao'),
         ], 200);
     }
 }

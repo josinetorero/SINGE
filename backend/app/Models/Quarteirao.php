@@ -16,11 +16,13 @@ class Quarteirao extends Model
         'descricao',
     ];
 
+    /** @return BelongsTo<Bairro, $this> */
     public function bairro(): BelongsTo
     {
         return $this->belongsTo(Bairro::class, 'bairro_id');
     }
 
+    /** @return HasMany<Localizacao, $this> */
     public function localizacoes(): HasMany
     {
         return $this->hasMany(Localizacao::class, 'quarteirao_id');

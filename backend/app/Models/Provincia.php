@@ -14,11 +14,13 @@ class Provincia extends Model
         'codigo',
     ];
 
+    /** @return HasMany<Distrito, $this> */
     public function distritos(): HasMany
     {
         return $this->hasMany(Distrito::class, 'provincia_id');
     }
 
+    /** @return HasMany<Localizacao, $this> */
     public function localizacoes(): HasMany
     {
         return $this->hasMany(Localizacao::class, 'provincia_id');

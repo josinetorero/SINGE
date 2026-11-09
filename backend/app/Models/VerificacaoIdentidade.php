@@ -11,6 +11,7 @@ class VerificacaoIdentidade extends Model
 
     protected $fillable = [
         'documento_identificacao_id',
+        'utilizador_solicitante_id',
         'utilizador_verificador_id',
         'estado',
         'observacoes',
@@ -25,13 +26,21 @@ class VerificacaoIdentidade extends Model
         ];
     }
 
+    /** @return BelongsTo<DocumentoIdentificacao, $this> */
     public function documentoIdentificacao(): BelongsTo
     {
         return $this->belongsTo(DocumentoIdentificacao::class, 'documento_identificacao_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function utilizadorVerificador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'utilizador_verificador_id');
+    }
+
+    /** @return BelongsTo<User, $this> */
+    public function utilizadorSolicitante(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'utilizador_solicitante_id');
     }
 }

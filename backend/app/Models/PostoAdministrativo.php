@@ -16,16 +16,19 @@ class PostoAdministrativo extends Model
         'codigo',
     ];
 
+    /** @return BelongsTo<Distrito, $this> */
     public function distrito(): BelongsTo
     {
         return $this->belongsTo(Distrito::class, 'distrito_id');
     }
 
+    /** @return HasMany<Bairro, $this> */
     public function bairros(): HasMany
     {
         return $this->hasMany(Bairro::class, 'posto_administrativo_id');
     }
 
+    /** @return HasMany<Localizacao, $this> */
     public function localizacoes(): HasMany
     {
         return $this->hasMany(Localizacao::class, 'posto_administrativo_id');

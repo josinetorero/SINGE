@@ -10,53 +10,44 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('missoes', function (Blueprint $table) {
-        $table->id();
+    {
+        Schema::create('missoes', function (Blueprint $table) {
+            $table->id();
 
-        $table->foreignId('coordenador_id')
-                ->nullable()
-                ->after('equipa_id')
-                ->constrained('users')
+            $table->foreignId('ocorrencia_id')
+                ->constrained('ocorrencias')
                 ->restrictOnDelete();
 
-        $table->foreignId('ocorrencia_id')
-            ->constrained('ocorrencias')
-            ->restrictOnDelete();
+            $table->foreignId('equipa_id')
+                ->constrained('equipas')
+                ->restrictOnDelete();
 
-        $table->foreignId('equipa_id')
-            ->constrained('equipas')
-            ->restrictOnDelete();
+            $table->enum('estado', [
+                'atribuida',
+                'em_deslocacao',
+                'em_execucao',
+                'concluida',
+                'cancelada',
+            ])->default('atribuida');
 
-        $table->enum('estado', [
-            'atribuida',
-            'em_deslocacao',
-            'em_execucao',
-            'concluida',
-            'cancelada',
-        ])->default('atribuida');
+            $table->dateTime('data_atribuicao');
+            $table->dateTime('data_inicio')->nullable();
+            $table->dateTime('data_conclusao')->nullable();
 
-        $table->dateTime('data_atribuicao');
-        $table->dateTime('data_inicio')->nullable();
-        $table->dateTime('data_conclusao')->nullable();
+            $table->text('observacoes')->nullable();
 
-        $table->text('observacoes')->nullable();
+            $table->timestamps();
 
-        $table->timestamps();
-
-        $table->index(['ocorrencia_id', 'estado']);
-        $table->index(['equipa_id', 'estado']);
-    });
-}
+            $table->index(['ocorrencia_id', 'estado']);
+            $table->index(['equipa_id', 'estado']);
+        });
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('missoes', function (Blueprint $table) {
-            $table->dropForeign(['coordenador_id']);
-            $table->dropColumn('coordenador_id');
-        });
+        Schema::dropIfExists('missoes');
     }
 };

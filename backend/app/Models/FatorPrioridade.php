@@ -24,6 +24,7 @@ class FatorPrioridade extends Model
         ];
     }
 
+    /** @return HasMany<DetalheAvaliacao, $this> */
     public function detalhesAvaliacoes(): HasMany
     {
         return $this->hasMany(DetalheAvaliacao::class, 'fator_prioridade_id');

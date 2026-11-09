@@ -31,11 +31,13 @@ class DocumentoIdentificacao extends Model
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function utilizador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'utilizador_id');
     }
 
+    /** @return HasMany<VerificacaoIdentidade, $this> */
     public function verificacoes(): HasMany
     {
         return $this->hasMany(VerificacaoIdentidade::class, 'documento_identificacao_id');

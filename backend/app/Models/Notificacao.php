@@ -28,16 +28,19 @@ class Notificacao extends Model
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function utilizador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'utilizador_id');
     }
 
+    /** @return BelongsTo<Ocorrencia, $this> */
     public function ocorrencia(): BelongsTo
     {
         return $this->belongsTo(Ocorrencia::class, 'ocorrencia_id');
     }
 
+    /** @return BelongsTo<Missao, $this> */
     public function missao(): BelongsTo
     {
         return $this->belongsTo(Missao::class, 'missao_id');

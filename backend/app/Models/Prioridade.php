@@ -22,11 +22,13 @@ class Prioridade extends Model
         ];
     }
 
+    /** @return HasMany<Ocorrencia, $this> */
     public function ocorrencias(): HasMany
     {
         return $this->hasMany(Ocorrencia::class, 'prioridade_id');
     }
 
+    /** @return HasMany<AvaliacaoPrioridade, $this> */
     public function avaliacoes(): HasMany
     {
         return $this->hasMany(AvaliacaoPrioridade::class, 'prioridade_id');

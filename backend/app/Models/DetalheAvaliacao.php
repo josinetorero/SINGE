@@ -13,6 +13,7 @@ class DetalheAvaliacao extends Model
         'avaliacao_prioridade_id',
         'fator_prioridade_id',
         'pontuacao',
+        'peso_aplicado',
         'observacao',
     ];
 
@@ -20,9 +21,11 @@ class DetalheAvaliacao extends Model
     {
         return [
             'pontuacao' => 'decimal:2',
+            'peso_aplicado' => 'decimal:2',
         ];
     }
 
+    /** @return BelongsTo<AvaliacaoPrioridade, $this> */
     public function avaliacao(): BelongsTo
     {
         return $this->belongsTo(
@@ -31,6 +34,7 @@ class DetalheAvaliacao extends Model
         );
     }
 
+    /** @return BelongsTo<FatorPrioridade, $this> */
     public function fator(): BelongsTo
     {
         return $this->belongsTo(

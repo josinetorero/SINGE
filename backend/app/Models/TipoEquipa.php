@@ -22,6 +22,7 @@ class TipoEquipa extends Model
         ];
     }
 
+    /** @return HasMany<Equipa, $this> */
     public function equipas(): HasMany
     {
         return $this->hasMany(

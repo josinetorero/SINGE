@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\EstadoEquipa;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\EstadoEquipa;
 
 class Equipa extends Model
 {
@@ -25,6 +25,7 @@ class Equipa extends Model
         ];
     }
 
+    /** @return BelongsTo<TipoEquipa, $this> */
     public function tipoEquipa(): BelongsTo
     {
         return $this->belongsTo(
@@ -33,11 +34,13 @@ class Equipa extends Model
         );
     }
 
+    /** @return HasMany<User, $this> */
     public function utilizadores(): HasMany
     {
         return $this->hasMany(User::class, 'equipa_id');
     }
 
+    /** @return HasMany<Missao, $this> */
     public function missoes(): HasMany
     {
         return $this->hasMany(Missao::class, 'equipa_id');

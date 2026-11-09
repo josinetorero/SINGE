@@ -17,21 +17,25 @@ class Bairro extends Model
         'codigo',
     ];
 
+    /** @return BelongsTo<Municipio, $this> */
     public function municipio(): BelongsTo
     {
         return $this->belongsTo(Municipio::class, 'municipio_id');
     }
 
+    /** @return BelongsTo<PostoAdministrativo, $this> */
     public function postoAdministrativo(): BelongsTo
     {
         return $this->belongsTo(PostoAdministrativo::class, 'posto_administrativo_id');
     }
 
+    /** @return HasMany<Quarteirao, $this> */
     public function quarteiroes(): HasMany
     {
         return $this->hasMany(Quarteirao::class, 'bairro_id');
     }
 
+    /** @return HasMany<Localizacao, $this> */
     public function localizacoes(): HasMany
     {
         return $this->hasMany(Localizacao::class, 'bairro_id');

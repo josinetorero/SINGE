@@ -14,6 +14,7 @@ class Perfil extends Model
         'descricao',
     ];
 
+    /** @return HasMany<User, $this> */
     public function utilizadores(): HasMany
     {
         return $this->hasMany(User::class, 'perfil_id');
