@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Perfil;
+use App\Models\Equipa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -42,4 +44,21 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function withProfile(string $profile): static
+    {
+        $perfil = Perfil::query()->firstOrCreate(['nome' => $profile], ['descricao' => "Perfil de teste: {$profile}."]);
+
+        return $this->state(fn (array $attributes): array => ['perfil_id' => $perfil->id]);
+    }
+
+    public function administrator(): static { return $this->withProfile('Administrador'); }
+    public function coordinator(): static { return $this->withProfile('Coordenador'); }
+    public function operator(): static { return $this->withProfile('Operador'); }
+    public function agent(?Equipa $team = null): static
+    {
+        $factory = $this->withProfile('Agente');
+        return $team ? $factory->state(fn (array $attributes): array => ['equipa_id' => $team->id]) : $factory;
+    }
+    public function citizen(): static { return $this->withProfile('Cidadão'); }
 }

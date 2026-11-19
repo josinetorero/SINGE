@@ -12,7 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            if (!Schema::hasColumn('users', 'perfil_id')) {
+                $table->foreignId('perfil_id')
+                    ->nullable()
+                    ->constrained('perfis')
+                    ->nullOnDelete();
+            }
+
+            if (!Schema::hasColumn('users', 'equipa_id')) {
+                $table->foreignId('equipa_id')
+                    ->nullable()
+                    ->constrained('equipas')
+                    ->nullOnDelete();
+            }
         });
     }
 
@@ -22,7 +34,15 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('users', 'perfil_id')) {
+                $table->dropForeign(['perfil_id']);
+                $table->dropColumn('perfil_id');
+            }
+
+            if (Schema::hasColumn('users', 'equipa_id')) {
+                $table->dropForeign(['equipa_id']);
+                $table->dropColumn('equipa_id');
+            }
         });
     }
 };

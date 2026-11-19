@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'openai' => [
+        'enabled' => env('OPENAI_ENABLED', true),
+        'api_key' => env('OPENAI_API_KEY'),
+        'base_url' => env('OPENAI_BASE_URL', 'https://api.openai.com/v1'),
+        'model' => env('OPENAI_MODEL', 'gpt-6.1-terra'),
+        'reasoning_effort' => env('OPENAI_REASONING_EFFORT', 'none'),
+        'max_output_tokens' => (int) env('OPENAI_MAX_OUTPUT_TOKENS', 6000),
+        'timeout' => (int) env('OPENAI_TIMEOUT', 120),
+        'connect_timeout' => (int) env('OPENAI_CONNECT_TIMEOUT', 5),
+    ],
+
 ];

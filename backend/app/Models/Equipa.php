@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use App\Enums\EstadoEquipa;
+use Database\Factories\EquipaFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Equipa extends Model
 {
+    /** @use HasFactory<EquipaFactory> */
+    use HasFactory;
+
     protected $table = 'equipas';
 
     protected $fillable = [
@@ -15,8 +21,18 @@ class Equipa extends Model
         'tipo_equipa_id',
         'estado',
         'descricao',
+        'latitude',
+        'longitude',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'estado' => EstadoEquipa::class,
+        ];
+    }
+
+    /** @return BelongsTo<TipoEquipa, $this> */
     public function tipoEquipa(): BelongsTo
     {
         return $this->belongsTo(
@@ -25,11 +41,13 @@ class Equipa extends Model
         );
     }
 
+    /** @return HasMany<User, $this> */
     public function utilizadores(): HasMany
     {
         return $this->hasMany(User::class, 'equipa_id');
     }
 
+    /** @return HasMany<Missao, $this> */
     public function missoes(): HasMany
     {
         return $this->hasMany(Missao::class, 'equipa_id');

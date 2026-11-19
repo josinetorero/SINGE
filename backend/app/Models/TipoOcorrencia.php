@@ -22,6 +22,7 @@ class TipoOcorrencia extends Model
         ];
     }
 
+    /** @return HasMany<Ocorrencia, $this> */
     public function ocorrencias(): HasMany
     {
         return $this->hasMany(

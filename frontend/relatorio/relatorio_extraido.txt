@@ -1,0 +1,1829 @@
+FACULDADEDE DE CIÊNCIAS 
+
+LICENCIATURA EM INFORMÁTICA – LABORAL
+
+Engenharia de Software
+
+Tema: Sistema Inteligente de Gestão e Coordernação de Emergências
+
+Discente: 
+
+     - Celeste Manhique
+
+     - Josine Torero
+
+     - Yúmin Bay
+
+Docente: Alfredo Muchanga
+
+Maputo, Setembro de 2026                                                     
+
+ Índice
+
+ TOC \o "1-3" \h \z \u Contextualização PAGEREF _Toc239707860 \h 3
+
+Problema que o Sistema pretende resolver PAGEREF _Toc239707861 \h 4
+
+Caso de estudo/entidade responsável pelo sistema PAGEREF _Toc239707862 \h 5
+
+Função de cada elemento do grupo PAGEREF _Toc239707863 \h 5
+
+Principais fontes de requisitos e stakeholders do sistema PAGEREF _Toc239707864 \h 7
+
+Stakeholders do sistema PAGEREF _Toc239707865 \h 8
+
+Técnicas de elicitação de requisitos PAGEREF _Toc239707866 \h 10
+
+Entrevistas PAGEREF _Toc239707867 \h 10
+
+Questionários PAGEREF _Toc239707868 \h 11
+
+Aplicação das técnicas no projeto PAGEREF _Toc239707869 \h 11
+
+Requisitos funcionais PAGEREF _Toc239707870 \h 13
+
+Requisitos não funcionais PAGEREF _Toc239707871 \h 18
+
+Casos de Uso do Sistema PAGEREF _Toc239707872 \h 20
+
+Identificação dos Atores PAGEREF _Toc239707873 \h 21
+
+Relações entre Casos de Uso e Fluxo Geral PAGEREF _Toc239707874 \h 28
+
+Metodologia PAGEREF _Toc239707875 \h 29
+
+Metodologia ágil Scrum PAGEREF _Toc239707876 \h 29
+
+Papéis, Eventos e Artefatos Aplicados ao SINGE PAGEREF _Toc239707877 \h 30
+
+Aplicação Prática do Scrum ao SINGE PAGEREF _Toc239707878 \h 32
+
+Definição dos Entregáveis PAGEREF _Toc239707879 \h 33
+
+Cronograma de Atividades PAGEREF _Toc239707880 \h 34
+
+Identificação de Riscos e Modelo de Gestão PAGEREF _Toc239707881 \h 35
+
+Matriz de Dependência PAGEREF _Toc239707882 \h 37
+
+Contextualização
+
+Moçambique está sujeito a diferentes situações de emergência, incluindo fenómenos climáticos extremos, inundações, ciclones e outras ocorrências que podem afetar pessoas, infraestruturas e serviços essenciais.
+
+A gestão de uma emergência envolve diferentes intervenientes, como autoridades, equipas de resposta, unidades sanitárias, municípios, organizações humanitárias e cidadãos. Cada interveniente pode possuir informações e responsabilidades diferentes, tornando necessária uma coordenação adequada para garantir uma resposta rápida e organizada.
+
+O SINGE (Sistema Inteligente de Gestão e Coordenação de Emergências) é proposto como uma solução de software destinada a apoiar esse processo de coordenação. O sistema pretende centralizar o registo e acompanhamento das ocorrências, permitindo que as informações relevantes sejam organizadas e utilizadas para apoiar a tomada de decisões.
+
+Para garantir a viabilidade do projeto dentro do período disponível, o grupo decidiu limitar o desenvolvimento a um MVP (Minimum Viable Product), concentrado num módulo principal de gestão e priorização de ocorrências.
+
+Neste módulo, uma ocorrência pode ser registada por um operador ou cidadão, localizada geograficamente, classificada e analisada pelo sistema. A componente de inteligência artificial poderá auxiliar na definição da prioridade da ocorrência e na sugestão de recursos adequados. A decisão final permanece sob responsabilidade do operador.
+
+Assim, o projeto não pretende substituir as instituições responsáveis pela gestão de emergências, mas sim disponibilizar uma ferramenta tecnológica de apoio à organização da informação, priorização e coordenação das ocorrências.
+
+Problema que o Sistema pretende resolver
+
+Durante uma situação de emergência podem surgir várias ocorrências simultaneamente, provenientes de diferentes locais e com diferentes níveis de gravidade. A existência de múltiplas ocorrências torna necessário determinar quais devem ser tratadas primeiro e quais recursos devem ser mobilizados.
+
+Um dos problemas identificados é a dificuldade de organizar e priorizar estas ocorrências de forma rápida e consistente quando existem muitas informações disponíveis.
+
+Uma ocorrência pode envolver informações como:
+
+Localização;
+
+Tipo de emergência;
+
+Número estimado de pessoas afetadas;
+
+Nível de gravidade;
+
+Recursos necessários;
+
+Estado da ocorrência;
+
+Equipa responsável pelo atendimento.
+
+Quando essas informações não estão devidamente organizadas, pode tornar-se mais difícil para os responsáveis identificar as situações mais urgentes e acompanhar a sua evolução.
+
+O SINGE pretende resolver este problema através de um módulo centralizado de gestão de ocorrências, permitindo registar, classificar, priorizar e acompanhar cada ocorrência.
+
+O sistema utilizará também uma componente de inteligência artificial para apoiar a priorização das ocorrências e recomendar possíveis recursos, reduzindo o trabalho manual e fornecendo ao operador informação adicional para a tomada de decisão.
+
+É importante destacar que a IA não terá autonomia para tomar decisões críticas. As recomendações produzidas pelo sistema deverão ser analisadas e validadas pelo utilizador responsável.
+
+Caso de estudo/entidade responsável pelo sistema
+
+O caso de estudo considerado para o desenvolvimento do SINGE é a gestão de ocorrências de emergência em Moçambique, tendo como referência institucional o Instituto Nacional de Gestão e Redução do Risco de Desastres (INGD) e estruturas de coordenação de emergência como o Centro Nacional Operativo de Emergência (CENOE).
+
+O sistema proposto é académico e não representa um sistema oficial do INGD. O INGD é utilizado como referência para compreender o contexto e os processos relacionados com a gestão de emergências.
+
+O SINGE seria concebido como uma ferramenta de apoio às entidades responsáveis pela resposta a emergências, permitindo centralizar informações sobre ocorrências e facilitar a sua priorização e acompanhamento, funcionando como fonte de requisitos e stakeholder institucional.
+
+Função de cada elemento do grupo
+
+O projeto será desenvolvido por três elementos. A distribuição das responsabilidades pretende garantir que todos participem nas diferentes fases do desenvolvimento.
+
+Designação
+
+Nome
+
+Função principal
+
+Elemento 1
+
+Celeste Manhique
+
+Análise e Engenharia de Requisitos
+
+Elemento 2
+
+Josine Torero
+
+Desenvolvimento Back-end e Base de Dados
+
+Elemento 3
+
+Yúmin Bay
+
+Front-end, Interface e Integração
+
+Celeste Israel- Análise e Engenharia de Requisitos
+
+Responsabilidades:
+
+Levantamento e análise dos requisitos;
+
+Identificação dos stakeholders;
+
+Elaboração dos casos de uso;
+
+Documentação dos requisitos;
+
+Apoio à validação do sistema;
+
+Participação nos testes.
+
+Josine Torero- Desenvolvimento Back-end e Base de Dados
+
+Responsabilidades:
+
+Desenvolvimento da API;
+
+Implementação das regras de negócio;
+
+Modelação e implementação da base de dados;
+
+Gestão das ocorrências;
+
+Autenticação e autorização;
+
+Integração com os restantes componentes.
+
+Yúmin Biby- Front-end, Interface e Integração
+
+Responsabilidades:
+
+Desenvolvimento da interface web;
+
+Dashboard;
+
+Apresentação das ocorrências;
+
+Integração com a API;
+
+Implementação da interação com o utilizador;
+
+Apoio aos testes e documentação.
+
+Responsabilidade conjunta
+
+Todos os elementos participarão conjuntamente em:
+
+Definição da arquitetura;
+
+Reuniões e decisões do projeto;
+
+Testes;
+
+Controlo de versões;
+
+Documentação;
+
+Apresentação e defesa do trabalho.
+
+Principais fontes de requisitos e stakeholders do sistema
+
+As fontes de requisitos correspondem às pessoas, entidades, documentos e processos que podem fornecer informações relevantes para determinar o funcionamento do SINGE.
+
+As principais fontes consideradas são:
+
+1. Operadores de emergência
+
+São uma das principais fontes de requisitos, pois utilizarão o sistema para registar, classificar, priorizar e acompanhar ocorrências.
+
+2. Equipas de resposta
+
+Permitem identificar requisitos relacionados com a recepção de tarefas, recursos atribuídos e atualização do estado das ocorrências.
+
+3. Cidadãos
+
+São importantes para definir os requisitos relacionados com o reporte de ocorrências e recepção de informações.
+
+4. Gestores e decisores
+
+Permitem identificar necessidades relacionadas com dashboards, indicadores, relatórios e acompanhamento geral das ocorrências.
+
+5. Entidades de gestão de emergências
+
+Instituições como o INGD/CENOE constituem referências importantes para compreender processos, responsabilidades e necessidades de coordenação.
+
+6. Documentação e processos existentes
+
+Documentos relacionados com gestão de riscos, emergência, comunicação e resposta constituem fontes complementares para o levantamento dos requisitos.
+
+Para o MVP, as principais fontes serão os operadores, equipas de resposta, cidadãos e gestores, enquanto instituições como INGD/CENOE, autoridades locais, saúde, meteorologia, polícia, bombeiros e organizações humanitárias serão consideradas stakeholders externos ou fontes de informação, sem interação direta e obrigatória com o sistema nesta fase.
+
+Stakeholders do sistema
+
+Stakeholders são pessoas ou organizações que possuem interesse no sistema, utilizam as suas funcionalidades ou podem ser afetadas pelo seu funcionamento.
+
+Os principais stakeholders identificados são:
+
+Stakeholder
+
+Papel no sistema
+
+É ator direto no MVP?
+
+Operador de emergência
+
+Regista, classifica, prioriza e acompanha ocorrências
+
+Sim
+
+Equipa de resposta
+
+Recebe ocorrências/tarefas e atualiza o estado da intervenção
+
+Sim
+
+Cidadão
+
+Reporta ocorrências e recebe informações relevantes
+
+Sim
+
+Gestor/decisor
+
+Consulta indicadores, painel de coordenação e relatórios agregados
+
+Sim (acesso de consulta, ver secção de Atores)
+
+Administrador
+
+Gere utilizadores, permissões e configurações
+
+Sim
+
+INGD/CENOE
+
+Referência institucional e fonte de informação/normas
+
+Não, stakeholder e fonte de requisitos
+
+Serviço Meteorológico
+
+Especialização de Entidade Externa; fornece dados meteorológicos
+
+Sim, como Entidade Externa (integração futura)
+
+Unidade Sanitária
+
+Especialização de Entidade Externa; recebe/atualiza informação de saúde
+
+Sim, como Entidade Externa (integração futura)
+
+Autoridade local
+
+Especialização de Entidade Externa; consulta/atualiza ocorrências na sua área
+
+Sim, como Entidade Externa (integração futura)
+
+Polícia/bombeiros
+
+Podem participar na resposta a ocorrências
+
+Não, stakeholder externo
+
+ONGs/organizações humanitárias
+
+Podem participar no apoio e resposta
+
+Não, stakeholder externo
+
+Para o MVP, a interação direta será concentrada principalmente em cinco perfis: operador de emergência, equipa de resposta, administrador, cidadão e gestor/decisor.
+
+Técnicas de elicitação de requisitos
+
+Entrevistas
+
+A entrevista é uma técnica de elicitação de requisitos baseada na interação direta com pessoas que possuem conhecimento sobre o domínio do sistema.
+
+Durante uma entrevista, o analista apresenta perguntas aos stakeholders com o objetivo de compreender os processos atuais, problemas existentes, necessidades e expectativas em relação ao sistema.
+
+As entrevistas podem ser:
+
+Estruturadas;
+
+Semiestruturadas;
+
+Não estruturadas.
+
+No contexto do SINGE, uma entrevista semiestruturada seria adequada, pois permite preparar previamente um conjunto de perguntas, mantendo alguma flexibilidade para explorar novas informações fornecidas pelo entrevistado.
+
+Vantagens
+
+Permitem obter informações detalhadas;
+
+Possibilitam esclarecer dúvidas imediatamente;
+
+Permitem explorar problemas específicos;
+
+Possibilitam compreender melhor as necessidades dos utilizadores;
+
+Permitem identificar requisitos que podem não estar documentados.
+
+Desvantagens
+
+Podem consumir bastante tempo;
+
+Dependem da disponibilidade dos entrevistados;
+
+As respostas podem apresentar opiniões subjetivas;
+
+O entrevistador pode influenciar algumas respostas;
+
+Pode ser difícil entrevistar todos os stakeholders.
+
+Questionários
+
+Os questionários consistem na apresentação de um conjunto de perguntas aos potenciais utilizadores ou stakeholders do sistema, permitindo recolher opiniões de um número maior de pessoas em comparação com entrevistas individuais.
+
+Vantagens
+
+Permitem alcançar muitas pessoas;
+
+Possuem baixo custo;
+
+Podem ser realizados rapidamente;
+
+Facilitam a comparação das respostas;
+
+Permitem recolher opiniões de diferentes perfis.
+
+Desvantagens
+
+Não permitem aprofundar facilmente as respostas;
+
+Perguntas mal formuladas podem gerar resultados pouco úteis;
+
+Os participantes podem interpretar as perguntas de formas diferentes;
+
+Existe menor interação entre analista e participante.
+
+Aplicação das técnicas no projeto
+
+Para este trabalho, o grupo utilizará principalmente entrevistas e questionários como técnicas de elicitação de requisitos.
+
+As entrevistas serão utilizadas para compreender o processo de gestão de ocorrências e identificar as necessidades dos utilizadores diretamente envolvidos na resposta a emergências.
+
+Técnica
+
+Stakeholders-alvo
+
+Objetivo
+
+Entrevista
+
+Operadores de emergência
+
+Compreender o processo atual de validação e priorização
+
+Questionário
+
+Cidadãos
+
+Identificar necessidades de reporte de ocorrências
+
+Entrevista
+
+Equipas de resposta
+
+Compreender o processo de despacho e aceitação de missões
+
+Análise documental
+
+INGD/CENOE
+
+Compreender procedimentos institucionais de resposta a emergências
+
+Questionário
+
+Gestores/decisores
+
+Identificar indicadores relevantes para acompanhamento
+
+Exemplos de perguntas:
+
+Como é registada atualmente uma ocorrência?
+
+Que informações são consideradas mais importantes?
+
+Como é determinada a prioridade de uma ocorrência?
+
+Quem decide qual ocorrência deve ser atendida primeiro?
+
+Como são atribuídos os recursos?
+
+Como é atualizado o estado de uma ocorrência?
+
+Quais são as principais dificuldades durante uma situação de emergência?
+
+Os questionários poderão ser utilizados para recolher opiniões de um grupo maior de potenciais utilizadores.
+
+Exemplos:
+
+Considera importante que as ocorrências sejam classificadas automaticamente?
+
+Muito importante
+
+Importante
+
+Pouco importante
+
+Não é importante
+
+Que informação considera mais importante ao receber uma ocorrência?
+
+Localização
+
+Gravidade
+
+Número de pessoas afetadas 
+
+Tipo de emergência
+
+Recursos necessários
+
+As respostas obtidas serão utilizadas como base para a definição e validação dos requisitos do SINGE.
+
+Requisitos funcionais
+
+Os requisitos funcionais descrevem o que o sistema deve fazer.
+
+Para o MVP do SINGE, foram definidos os seguintes requisitos funcionais:
+
+ID
+
+Requisito
+
+Prioridade
+
+Origem
+
+Critério de aceitação
+
+RF01
+
+Autenticar utilizador através de credenciais válidas (email/utilizador + palavra-passe).
+
+Alta
+
+Administrador
+
+Login com credenciais válidas concede acesso; 5 tentativas falhadas bloqueiam a conta por 15 minutos.
+
+RF02
+
+Permitir ao administrador criar, consultar, editar e desativar utilizadores.
+
+Alta
+
+Administrador
+
+Um utilizador criado passa a poder autenticar-se; um utilizador desativado deixa de conseguir iniciar sessão.
+
+RF03
+
+Aplicar diferentes níveis de acesso (RBAC) de acordo com o perfil do utilizador.
+
+Alta
+
+Administrador/Todos
+
+Um utilizador só visualiza opções de menu e dados permitidos ao seu perfil.
+
+RF04
+
+Permitir ao operador ou ao cidadão registar uma nova ocorrência contendo obrigatoriamente tipo, localização e descrição.
+
+Alta
+
+Operador/Cidadão
+
+Ao submeter os campos obrigatórios, o sistema armazena a ocorrência e gera um identificador único em até 3 segundos.
+
+RF05
+
+Permitir indicar a localização da ocorrência manualmente ou por geolocalização automática.
+
+Alta
+
+Cidadão
+
+A ocorrência fica associada a coordenadas geográficas válidas.
+
+RF06
+
+Permitir ao operador classificar a ocorrência validada de acordo com o tipo de evento.
+
+Alta
+
+Operador
+
+Após classificação, o campo "tipo" da ocorrência é preenchido e o estado muda para "Classificada".
+
+RF07
+
+Analisar as características da ocorrência classificada e sugerir um nível de prioridade (ver secção "Especificação Técnica da Priorização Inteligente").
+
+Alta
+
+Operador/IA
+
+Para uma ocorrência classificada, o sistema apresenta uma prioridade sugerida em menos de 2 segundos.
+
+RF08
+
+Apresentar os principais fatores que contribuíram para a prioridade sugerida.
+
+Alta
+
+Operador
+
+O ecrã de prioridade lista, no mínimo, os 5 fatores da fórmula de priorização e o respetivo peso.
+
+RF09
+
+Sugerir recursos ou equipas adequados para a ocorrência.
+
+Média
+
+Operador
+
+O sistema apresenta pelo menos uma equipa/recurso compatível com o tipo e localização da ocorrência.
+
+RF10
+
+Permitir ao operador aceitar ou alterar a prioridade e as recomendações produzidas pelo sistema, registando o motivo da alteração.
+
+Alta
+
+Operador
+
+Uma alteração de prioridade só é guardada se o operador preencher o motivo; a alteração fica registada em auditoria.
+
+RF11
+
+Permitir ao operador atribuir uma ocorrência a uma equipa de resposta.
+
+Alta
+
+Operador
+
+Após atribuição, a ocorrência aparece na lista de missões da equipa selecionada.
+
+RF12
+
+Permitir atualizar o estado da ocorrência ao longo do seu ciclo de vida (ver "Modelo de Estados da Ocorrência").
+
+Alta
+
+Operador/Equipa
+
+Só são permitidas transições de estado previstas no modelo de estados; transições inválidas são rejeitadas com mensagem explícita.
+
+RF13
+
+Manter o histórico de todas as alterações realizadas numa ocorrência.
+
+Alta
+
+Sistema
+
+Cada alteração de estado ou de prioridade gera uma entrada de histórico com utilizador, data/hora e valor anterior/novo.
+
+RF14
+
+Permitir a utilizadores autorizados consultar e pesquisar ocorrências por tipo, estado, prioridade e localização.
+
+Alta
+
+Operador/Gestor
+
+Uma pesquisa com filtros devolve apenas ocorrências que cumpram todos os critérios indicados.
+
+RF15
+
+Apresentar um dashboard com informações resumidas (quantidade, prioridade e estado) das ocorrências.
+
+Alta
+
+Operador
+
+O dashboard reflete os dados em tempo real, com desfasamento máximo de 5 segundos face à base de dados.
+
+RF16
+
+Permitir que um cidadão reporte uma ocorrência, fornecendo as informações disponíveis sobre o evento.
+
+Alta
+
+Cidadão
+
+O cidadão consegue submeter uma ocorrência sem necessidade de conhecimento técnico, em no máximo 5 passos.
+
+RF17
+
+Notificar os utilizadores relevantes quando ocorrer uma alteração importante numa ocorrência atribuída.
+
+Média
+
+Equipa/Operador
+
+Uma mudança de estado crítica dispara uma notificação em até 10 segundos.
+
+RF18
+
+Permitir ao Gestor/Decisor consultar, em modo de leitura, o painel de coordenação e relatórios agregados.
+
+Média
+
+Gestor/decisor
+
+O Gestor acede ao painel de coordenação (CU16) sem permissões de edição sobre ocorrências.
+
+Requisitos não funcionais
+
+ID
+
+Categoria
+
+Requisito quantificado
+
+RNF01
+
+Segurança
+
+Palavras-passe armazenadas com hash (bcrypt/Argon2); sessões expiram ao fim de 30 minutos de inatividade; comunicação exclusivamente via HTTPS; bloqueio de conta após 5 tentativas falhadas.
+
+RNF02
+
+Controlo de acesso
+
+Modelo RBAC com, no mínimo, 5 perfis (Cidadão, Operador, Equipa, Gestor, Administrador), aplicando o princípio do menor privilégio.
+
+RNF03
+
+Desempenho
+
+95% das consultas de ocorrências devem responder em menos de 2 segundos em condições normais de carga (até 50 utilizadores simultâneos, no âmbito do protótipo).
+
+RNF04
+
+Disponibilidade
+
+O sistema deverá atingir disponibilidade mínima de 99% durante o período de demonstração e testes definidos no cronograma.
+
+RNF05
+
+Confiabilidade / Integridade
+
+Nenhuma ocorrência registada poderá ser eliminada fisicamente da base de dados; alterações críticas (estado, prioridade) exigem confirmação e ficam sujeitas a auditoria (RN05).
+
+RNF06
+
+Escalabilidade
+
+A arquitetura (camadas separadas de apresentação, lógica e dados) deve suportar o aumento do número de ocorrências e utilizadores sem alteração estrutural do modelo de dados.
+
+RNF07
+
+Usabilidade
+
+Um operador sem formação prévia deve conseguir concluir o fluxo de validação de uma ocorrência (CU08) em, no máximo, 3 cliques após consultar a lista.
+
+RNF08
+
+Manutenibilidade
+
+O código deve seguir uma arquitetura em camadas (apresentação / lógica / dados), documentada, para permitir corrigir ou adicionar funcionalidades sem alterar módulos não relacionados.
+
+RNF09
+
+Auditoria
+
+Toda a alteração de estado, prioridade ou permissões deve gerar um registo imutável com utilizador, ação, data/hora e valores anterior/novo (RN05).
+
+RNF10
+
+Privacidade
+
+Dados pessoais de cidadãos são acedidos apenas por utilizadores com perfil Operador ou superior, em conformidade com o princípio de minimização de dados.
+
+RNF11
+
+Interoperabilidade
+
+A arquitetura deve prever pontos de integração (API) para futura ligação a sistemas de Entidades Externas (meteorologia, saúde, autoridades locais).
+
+RNF12
+
+Resiliência
+
+Uma falha de conectividade num componente não deve provocar perda de dados já submetidos; o cliente deve indicar claramente o estado "sem ligação".
+
+RNF13
+
+Compatibilidade
+
+A aplicação web deve funcionar corretamente nas duas versões mais recentes do Chrome, Firefox e Edge, e adaptar-se a ecrãs desde 360px de largura.
+
+RNF14
+
+Transparência da IA
+
+Toda a prioridade sugerida deve ser acompanhada da lista dos fatores considerados e do respetivo peso (RF08), nunca apresentada como valor "caixa preta".
+
+RNF15
+
+Supervisão humana
+
+Nenhuma decisão de prioridade ou atribuição de recursos é aplicada sem confirmação (explícita ou por não-alteração) do operador (RN03, RN04).
+
+Casos de Uso do Sistema
+
+Os casos de uso apresentados nesta secção representam as funcionalidades do SINGE na perspectiva dos diferentes atores que com ele interagem. A sua definição resulta diretamente dos requisitos funcionais identificados através das técnicas de elicitação descritas na secção anterior, constituindo, por isso, uma consequência direta e fundamentada do processo de levantamento de requisitos, e não uma listagem arbitrária de funcionalidades.
+
+Identificação dos Atores
+
+Para efeitos de modelação do SINGE enquanto MVP (Minimum Viable Product), foram identificados cinco atores principais, correspondentes aos diferentes perfis de utilizadores que interagem diretamente com o sistema:
+
+Cidadão- utilizador final que reporta ocorrências e consulta informação de segurança.
+
+Operador/Coordenador de Emergência- ator central, responsável pela validação, classificação e coordenação das ocorrências.
+
+Equipa de Resposta- responsável pela execução das missões atribuídas no terreno.
+
+Administrador do Sistema- responsável pela gestão técnica e operacional da plataforma.
+
+Entidade Parceira- instituições externas (por exemplo, serviços meteorológicos) que fornecem ou consultam informação relevante para o sistema.
+
+Casos de Uso- Cidadão
+
+ID
+
+Caso de Uso
+
+Classificação
+
+Descrição breve
+
+CU01
+
+Registar ocorrência
+
+Must
+
+Comunicar uma situação de emergência às entidades responsáveis.
+
+CU02
+
+Consultar ocorrências
+
+Should 
+
+Visualizar o estado das ocorrências reportadas.
+
+CU03
+
+Consultar alertas
+
+Won’t (futuro)
+
+Visualizar alertas ativos emitidos pelas entidades competentes.
+
+CU04
+
+Receber notificações
+
+Should 
+
+Ser notificado sobre alertas e atualizações relevantes.
+
+CU05
+
+Consultar informações de segurança
+
+Won’t (futuro)
+
+Aceder a recomendações e procedimentos de segurança.
+
+CU06
+
+Consultar locais de abrigo
+
+Won’t (futuro)
+
+Localizar abrigos disponíveis em situação de emergência.
+
+Descrição - CU01 Registar Ocorrência
+
+Ator principal
+
+Cidadão
+
+Objetivo
+
+Permitir ao cidadão comunicar, de forma rápida e estruturada, uma situação de emergência às entidades responsáveis.
+
+Pré-condições
+
+O cidadão possui acesso à aplicação (com ou sem registo prévio, conforme o modelo de acesso adoptado).
+
+Fluxo principal
+
+1. O cidadão acede ao sistema.
+
+2. Seleciona a opção "Registar ocorrência".
+
+3. Indica o tipo de emergência.
+
+4. Indica a localização da ocorrência.
+
+5. Fornece uma descrição da situação.
+
+6. Anexa evidências (fotografia ou vídeo), quando disponíveis.
+
+7. Submete a ocorrência.
+
+8. O sistema regista a informação e atribui um identificador único à ocorrência.
+
+9. A ocorrência fica disponível para avaliação pelo operador/coordenador.
+
+Fluxos alternativos
+
+Caso a localização não seja fornecida manualmente, o sistema pode tentar obtê-la automaticamente através de geolocalização (relação de inclusão com CU, Obter localização).
+
+Pós-condições
+
+A ocorrência fica registada no sistema com estado "Por validar", associada a um identificador único.
+
+Casos de Uso- Operador/Coordenador de Emergência
+
+Este é o ator central do SINGE, responsável pela generalidade das decisões operacionais registadas no sistema.
+
+ID
+
+Caso de Uso
+
+Classificação
+
+Descrição breve
+
+CU07
+
+Consultar ocorrências
+
+Must
+
+Visualizar a lista de ocorrências registadas no sistema.
+
+CU08
+
+Validar ocorrência
+
+Must
+
+Confirmar a veracidade e a relevância de uma ocorrência reportada.
+
+CU09
+
+Classificar ocorrência
+
+Must
+
+Atribuir uma categoria/tipo à ocorrência validada.
+
+CU10
+
+Avaliar impacto
+
+Must 
+
+Estimar a gravidade e a extensão dos efeitos da ocorrência.
+
+CU11
+
+Definir prioridade
+
+Must 
+
+Estabelecer o grau de urgência da resposta a atribuir.
+
+CU12
+
+Atribuir recursos
+
+Must
+
+Associar recursos disponíveis à resposta à ocorrência.
+
+CU13
+
+Coordenar equipa de resposta
+
+Should
+
+Orientar e acompanhar a atuação da equipa no terreno.
+
+CU14
+
+Atualizar estado da ocorrência
+
+Must
+
+Registar a evolução da ocorrência ao longo do tempo.
+
+CU15
+
+Emitir comunicação
+
+Could
+
+Divulgar informação oficial sobre a ocorrência.
+
+CU16
+
+Consultar painel de coordenação
+
+Must
+
+Visualizar uma vista operacional consolidada das ocorrências ativas.
+
+CU17
+
+Gerar relatório
+
+Should
+
+Produzir relatórios operacionais sobre as ocorrências geridas.
+
+Descrição- CU08 Validar Ocorrência
+
+Ator principal
+
+Operador/Coordenador de Emergência
+
+Relação
+
+Inclui CU07, Consultar ocorrências (o operador necessita de consultar a ocorrência antes de a validar).
+
+Objetivo
+
+Confirmar se a informação reportada corresponde a uma situação real e relevante, evitando o processamento de registos duplicados, incompletos ou infundados.
+
+Pré-condições
+
+Existir, pelo menos, uma ocorrência com o estado "Por validar".
+
+Fluxo principal
+
+1. O operador consulta a lista de ocorrências pendentes de validação.
+
+2. Seleciona uma ocorrência.
+
+3. Analisa a informação e, quando existentes, as evidências anexadas.
+
+4. Confirma a validade da ocorrência.
+
+5. O sistema atualiza o estado da ocorrência para "Validada".
+
+Fluxos alternativos
+
+Caso a ocorrência seja considerada infundada, duplicada ou incompleta, o operador pode rejeitá-la ou solicitar informação adicional ao cidadão, sendo o estado atualizado para "Rejeitada" ou "Aguarda informação".
+
+Pós-condições
+
+A ocorrência valida fica disponível para classificação (CU09).
+
+Descrição- CU11 Definir Prioridade
+
+Este caso de uso corresponde a uma das funcionalidades de maior valor acrescentado do SINGE, na medida em que integra uma componente de apoio inteligente à decisão. Importa, contudo, salientar que esta componente deve ser sempre entendida como um instrumento de apoio ao operador, e não como uma substituição da decisão humana.
+
+Ator principal
+
+Operador/Coordenador de Emergência
+
+Relação
+
+Estende CU10- Avaliar impacto (a definição de prioridade apoia-se na avaliação de impacto previamente realizada).
+
+Objetivo
+
+Estabelecer o grau de urgência de resposta a atribuir a uma ocorrência classificada.
+
+Pré-condições
+
+A ocorrência encontra-se validada e classificada.
+
+Fluxo principal
+
+1. O sistema apresenta ao operador os fatores relevantes para a definição da prioridade: gravidade, número estimado de pessoas afetadas, localização, vulnerabilidade da população e disponibilidade de recursos.
+
+2. O sistema sugere um nível de prioridade, com base nesses fatores.
+
+3. O operador analisa a sugestão apresentada.
+
+4. O operador confirma ou ajusta o nível de prioridade.
+
+5. O sistema regista a prioridade definida, associada à ocorrência.
+
+Fluxos alternativos
+
+O operador pode, a qualquer momento, sobrepor-se à sugestão do sistema, devendo essa decisão ficar registada para efeitos de auditoria (CU28).
+
+Pós-condições
+
+A ocorrência fica associada a um nível de prioridade, disponível para a fase de atribuição de recursos (CU12).
+
+Casos de Uso- Equipa de Resposta
+
+ID
+
+Caso de Uso
+
+Classificação
+
+Descrição breve
+
+CU18
+
+Consultar missão atribuída
+
+Must
+
+Visualizar os detalhes de uma missão que lhe foi atribuída.
+
+CU19
+
+Aceitar missão
+
+Must
+
+Confirmar a disponibilidade para executar a missão atribuída.
+
+CU20
+
+Atualizar estado da missão
+
+Must
+
+Registar o progresso da missão em curso.
+
+CU21
+
+Atualizar localização
+
+Could
+
+Partilhar a posição atual da equipa no terreno.
+
+CU22
+
+Registar recursos utilizados
+
+Could
+
+Documentar os recursos efetivamente mobilizados durante a missão.
+
+CU23
+
+Comunicar conclusão da intervenção
+
+Should
+
+Notificar o encerramento da missão atribuída.
+
+Descrição- CU19 Aceitar Missão
+
+Ator principal
+
+Equipa de Resposta
+
+Relação
+
+Inclui CU18-  Consultar missão atribuída.
+
+Objetivo
+
+Confirmar a disponibilidade e o compromisso da equipa para a execução de uma missão atribuída pelo operador/coordenador.
+
+Pré-condições
+
+Existir uma missão atribuída à equipa, ainda não aceite.
+
+Fluxo principal
+
+1. A equipa consulta os detalhes da missão atribuída.
+
+2. Confirma a aceitação da missão.
+
+3. O sistema atualiza o estado da missão para "Aceite" e notifica o operador.
+
+4. A equipa desloca-se ao local indicado.
+
+Fluxos alternativos
+
+Caso a equipa não possa aceitar a missão, o sistema regista a recusa e notifica o operador, permitindo a reatribuição da missão a outra equipa disponível.
+
+Pós-condições
+
+A missão fica associada à equipa e disponível para acompanhamento no painel de coordenação (CU16).
+
+Casos de Uso- Administrador do Sistema
+
+Código
+
+Caso de Uso
+
+Classificação
+
+Descrição breve
+
+CU24
+
+Gerir utilizadores
+
+Must
+
+Criar, editar e desativar contas de utilizador.
+
+CU25
+
+Gerir perfis e permissões
+
+Must
+
+Definir os níveis de acesso associados a cada perfil.
+
+CU26
+
+Gerir entidades
+
+Won’t (futuro)
+
+Registar e manter atualizada a informação das entidades parceiras.
+
+CU27
+
+Configurar parâmetros do sistema
+
+Won’t (futuro)
+
+Ajustar parâmetros gerais de funcionamento da plataforma.
+
+CU28
+
+Consultar logs/auditoria
+
+Should 
+
+Analisar o histórico de ações realizadas no sistema.
+
+Casos de Uso- Entidades Parceiras
+
+As entidades parceiras correspondem a instituições externas ao SINGE, cuja interação com o sistema pode variar em função do nível de integração acordado. Em função do modelo final adoptado no diagrama de casos de uso, estas entidades podem:
+
+Fornecer dados meteorológicos (por exemplo, alertas de ciclones ou previsão de precipitação);
+
+Disponibilizar informação relevante para a avaliação de risco;
+
+Atualizar informação operacional relativa a uma ocorrência em curso;
+
+Consultar informação previamente autorizada pelo coordenador.
+
+Relações entre Casos de Uso e Fluxo Geral
+
+Para efeitos de construção do diagrama de casos de uso em UML, os 28 casos de uso identificados não devem ser representados de forma dispersa, mas sim organizados de acordo com as relações que estabelecem entre si, nomeadamente as relações de inclusão («include») e de extensão («extend»). A tabela seguinte sistematiza as principais relações identificadas:
+
+Tipo
+
+Caso de uso base
+
+Caso de uso relacionado
+
+include
+
+CU08- Validar ocorrência
+
+CU07- Consultar ocorrências
+
+include
+
+CU09- Classificar ocorrência
+
+CU08- Validar ocorrência
+
+include
+
+CU11- Definir prioridade
+
+CU10- Avaliar impacto
+
+include
+
+CU19- Aceitar missão
+
+CU18- Consultar missão atribuída
+
+include
+
+CU13- Coordenar equipa de resposta
+
+CU16- Consultar painel de coordenação
+
+extend
+
+CU01- Registar ocorrência
+
+CU01a- Anexar evidências
+
+extend
+
+CU14- Atualizar estado da ocorrência
+
+CU15- Emitir comunicação
+
+extend
+
+CU20- Atualizar estado da missão
+
+CU22- Registar recursos utilizados
+
+Metodologia 
+
+Para o desenvolvimento do Sistema Inteligente Nacional de Gestão e Coordenação de Emergências (SINGE), optou-se pela metodologia ágil Scrum. Esta escolha não se baseia numa tendência, mas sim numa adequação direta às características do projeto.
+
+Metodologia ágil Scrum
+
+O Scrum é um framework ágil para gestão de projetos, inicialmente focado no desenvolvimento de software, que se baseia em ciclos de trabalho curtos e iterativos chamados Sprints. Ele permite que as equipas se adaptem rapidamente a mudanças, entreguem valor de forma contínua e mantenham um ritmo sustentável de trabalho.
+
+Princípios Fundamentais do Scrum:
+
+Transparência: Todos os aspetos do processo (trabalho a ser feito, progresso, impedimentos) devem ser visíveis para todos os membros da equipa e stakeholders.
+
+Inspeção: Os membros da equipa inspecionam frequentemente o progresso e os artefatos para detectar variações indesejadas.
+
+Adaptação: Se, durante a inspeção, se verificar que algo está fora do rumo, a equipa adapta o processo ou o produto o mais rápido possível para minimizar desvios.
+
+Empirismo: A gestão do trabalho baseia-se em factos observados e na experiência, em vez de em planeamentos detalhados a longo prazo.
+
+Características do Scrum
+
+Desenvolvimento Iterativo e Incremental: O produto é construído em pedaços (incrementos) que são entregues ao final de cada Sprint.
+
+Desenvolvimento Iterativo e Incremental: O produto é construído em pedaços (incrementos) que são entregues ao final de cada Sprint.
+
+Foco no Valor de Negócio: O Product Owner prioriza o Product Backlog para garantir que as funcionalidades de maior valor são desenvolvidas primeiro.
+
+Papéis, Eventos e Artefatos Aplicados ao SINGE
+
+Elemento do Scrum
+
+Aplicação no Projecto SINGE
+
+Product Owner
+
+Yúmin Bay gere o Product Backlog e prioriza as funcionalidades por valor, por exemplo, o CU08 (Validar ocorrência) tem prioridade sobre o CU17 (Gerar relatório).
+
+Scrum Master
+
+Celeste Israel facilita os eventos Scrum, assegura a aplicação do processo e remove impedimentos, como dificuldades técnicas na integração do motor de IA (CU11).
+
+Developers
+
+Celeste Israel, Josine Torero, Yúmin Bay implementam o incremento em cada Sprint, partilhando a responsabilidade pelo desenvolvimento do software.
+
+Product Backlog
+
+Lista priorizada de todos os requisitos funcionais (derivados dos CU01 a CU28), requisitos não funcionais e tarefas técnicas.
+
+Sprint
+
+Ciclo de 2 semanas no qual a equipa produz um incremento testável do produto; o projeto totaliza 5 Sprints em 10 semanas.
+
+Sprint Planning
+
+Reunião de início de Sprint para selecionar os itens do Backlog a implementar, definindo o objetivo da Sprint.
+
+Daily Scrum
+
+Reunião diária de 15 minutos para sincronizar o trabalho e identificar impedimentos.
+
+Sprint Review
+
+Demonstração do incremento funcional ao docente/stakeholder no final da Sprint, com recolha de feedback para o Backlog.
+
+Sprint Retrospective
+
+Reflexão da equipa sobre o processo, com definição de ações concretas de melhoria para a Sprint seguinte.
+
+Vantagens 
+
+Adaptabilidade a mudanças: No desenvolvimento de um sistema inovador como o SINGE, requisitos podem ser refinados ao longo do tempo à medida que a equipa e os stakeholders compreendem melhor o domínio (ex: a complexidade da IA de priorização). O Scrum permite acomodar estas mudanças sem grandes impactos.
+
+Entrega de valor antecipada e contínua: A cada duas semanas, entregamos um incremento funcional. Isto permite que o professor/stakeholders vejam o progresso real e forneçam feedback cedo, evitando "surpresas" no final.
+
+Gestão de Risco: Ao desenvolver em Sprints curtas, os riscos (técnicos ou de requisitos) são identificados e mitigados mais cedo.
+
+Ritmo Sustentável: As Sprints com duração fixa e objetivos claros ajudam a equipa a manter um ritmo de trabalho consistente, evitando picos de stress no final do projeto (que pode ter 10 semanas).
+
+Foco no MVP: O Scrum ajuda a equipa a manter o foco no Mínimo Produto Viável (MVP), evitando o "gold-plating" (adicionar funcionalidades desnecessárias) e garantindo que os elementos centrais do sistema estejam prontos.
+
+Desvantagens 
+
+Requer equipa dedicada: O Scrum funciona melhor quando a equipa está totalmente dedicada ao projeto, o que é o nosso caso.
+
+Pode ser difícil de dimensionar para equipas grandes: Para uma equipa pequena como a nossa (3 elementos), é uma ferramenta excelente.
+
+Dependência de feedback constante: O sucesso do projeto depende do feedback regular dos stakeholders. No nosso contexto, o docente desempenhará esse papel.
+
+Aplicação Prática do Scrum ao SINGE
+
+Esta secção demonstra como a teoria Scrum é traduzida em ações concretas para o desenvolvimento do SINGE.
+
+Divisão das Sprints:
+
+O projeto de 10 semanas será dividido em 5 Sprints de 2 semanas cada, alinhadas com os marcos do cronograma.
+
+Sprint
+
+Objetivo (Sprint Goal)
+
+Casos de Uso Prioritários
+
+Incremento Entregue
+
+Sprint 1
+
+Estabelecer a base do sistema e a gestão de utilizadores.
+
+CU24, CU25
+
+Autenticação, perfis e base de dados configurada.
+
+Sprint 2
+
+Implementar o registo, validação e classificação de ocorrências.
+
+CU01, CU02, CU07, CU08, CU09
+
+Ocorrências registadas, validadas e classificadas.
+
+Sprint 3
+
+Permitir avaliação de impacto, priorização e atribuição de recursos.
+
+CU10, CU11, CU12, CU13, CU18, CU19
+
+Motor de IA de priorização e gestão de recursos.
+
+Sprint 4
+
+Implementar coordenação, comunicação e monitorização.
+
+CU14, CU15, CU16, CU20, CU21
+
+Painel de coordenação e comunicação ativos.
+
+Sprint 5
+
+Fechar o ciclo e preparar a entrega final.
+
+CU17, CU23, CU28
+
+Sistema completo, testado e pronto a apresentar.
+
+Definição dos Entregáveis
+
+Os entregáveis do projeto organizam-se em três categorias, alinhadas com os artefatos produzidos por cada elemento da equipa.
+
+Categoria
+
+Entregável
+
+Descrição
+
+Responsável
+
+Documentação
+
+Documento de Visão e Requisitos
+
+Visão do SINGE, problema, stakeholders e requisitos funcionais e não funcionais.
+
+Elemento 1
+
+Documentação
+
+Relatório de Elicitação e Modelação
+
+Técnicas de elicitação aplicadas e casos de uso CU01 a CU28.
+
+Elemento 1
+
+Documentação
+
+Plano de Gestão de Projeto
+
+Metodologia, cronograma, matriz de dependência e plano de gestão de riscos.
+
+Todos
+
+Documentação
+
+Relatório Final do Projeto
+
+Documento consolidado com todos os artefatos do projeto.
+
+Todos
+
+Software (MVP)
+
+Código-fonte do SINGE
+
+Front-end, back-end, base de dados e lógica de IA, prontos a executar.
+
+Todos
+
+Software (MVP)
+
+Base de Dados
+
+Script de criação com dados sintéticos para demonstração.
+
+Elemento 2
+
+Software (MVP)
+
+Manual do Utilizador
+
+Guia de utilização por ator, com base nos casos de uso.
+
+Elemento 3
+
+Apresentação
+
+Apresentação Final
+
+Slides que resumem o projeto e o fluxo.
+
+Todos
+
+Apresentação
+
+Demonstração ao Vivo
+
+Percurso prático pelos casos de uso principais, do registo (CU01) ao encerramento (CU23).
+
+Todos
+
+Cronograma de Atividades
+
+O cronograma está organizado em 10 semanas, estruturado em 5 Sprints de 2 semanas, alinhado com os 28 casos de uso identificados.
+
+Sprint
+
+Foco Principal
+
+Atividades-Chave
+
+Casos de Uso
+
+Entregável-Chave
+
+Sprint 1 (Sem. 1-2)
+
+Configuração Inicial e Núcleo
+
+Definição da arquitetura e tecnologias.
+
+Configuração do ambiente de desenvolvimento.
+
+Criação da base de dados (esquema inicial).
+
+Implementação da autenticação e gestão de perfis.
+
+CU24, CU25
+
+Sistema de autenticação funcional (Incremento 1).
+
+Sprint 2 (Sem. 3-4)
+
+Gestão de Ocorrências e Mapa
+
+Registo de ocorrências.
+
+Validação e classificação.
+
+Integração de mapa para georreferenciação.
+
+Dashboard básico com lista de ocorrências.
+
+CU01, CU02, CU07, CU08, CU09
+
+Módulo de gestão de ocorrências com mapa (Incremento 2).
+
+Sprint 3 (Sem. 5-6)
+
+Gestão de Recursos e IA
+
+Avaliação de impacto e definição de prioridade (motor de IA).
+
+Atribuição de recursos e coordenação de equipas.
+
+Aceitação de missão e atualização de estado.
+
+CU10, CU11, CU12, CU13, CU18, CU19
+
+Motor de IA de priorização e gestão de recursos (Incremento 3).
+
+Sprint 4 (Sem. 7-8)
+
+Coordenação e Comunicação
+
+Painel de coordenação (dashboard operacional).
+
+Emissão de comunicações e notificações.
+
+Atualização de estado da missão e localização.
+
+CU14, CU15, CU16, CU20, CU21
+
+Painel de coordenação e comunicação activos (Incremento 4).
+
+Sprint 5 (Sem. 9-10)
+
+Finalização e Entrega
+
+Geração de relatórios.
+
+Conclusão da missão e logs de auditoria.
+
+Testes finais de integração e validação.
+
+Relatório final, manual do utilizador e apresentação.
+
+CU17, CU23, CU28
+
+Sistema completo, testado e pronto a apresentar (Incremento 5).
+
+Identificação de Riscos e Modelo de Gestão
+
+Os riscos seguintes foram identificados com base na complexidade do SINGE, nos 28 casos de uso e nas técnicas de elicitação aplicadas.
+
+ID
+
+Risco
+
+Nível
+
+Causa
+
+Consequência
+
+Resposta / Mitigação
+
+R01
+
+Âmbito demasiado alargado para o tempo disponível
+
+Crítico
+
+Tentativa de incluir os 28 casos de uso sem priorização.
+
+Atraso na entrega e funcionalidades incompletas.
+
+Definir o MVP com o fluxo principal (UC01, UC07-UC14, UC16, UC18, UC19); restantes ficam como "nice-to-have".
+
+R02
+
+Atraso de um elemento da equipa
+
+Alto
+
+Doença ou dificuldades técnicas.
+
+Desbalanceamento de carga e atraso na Sprint.
+
+Daily Scrums para detectar impedimentos cedo; redistribuição de tarefas.
+
+R03
+
+Falha de comunicação interna
+
+Médio
+
+Falta de clareza sobre decisões técnicas.
+
+Requisitos implementados de forma inconsistente.
+
+Daily Scrums e documentação das decisões (ex.: relações entre UC08 e UC07).
+
+R04
+
+Dificuldade na implementação da IA
+
+Crítico
+
+Complexidade dos modelos de classificação e priorização (UC10, UC11).
+
+Atraso ou falha da funcionalidade diferenciadora do sistema.
+
+Começar por regras de negócio simples; evoluir para modelo mais complexo se o tempo permitir.
+
+R05
+
+Integração tardia dos componentes
+
+Alto
+
+Desenvolvimento isolado por módulo.
+
+Erros de integração complexos e demorados.
+
+Integração contínua desde a Sprint 2 (UI + API + BD).
+
+R06
+
+Bugs críticos na fase final
+
+Alto
+
+Testes concentrados apenas no fim do projeto.
+
+Instabilidade do sistema durante a apresentação.
+
+Testes contínuos a cada Sprint; última Sprint reservada a testes e correções.
+
+R07
+
+Falta de dados realistas para testes
+
+Médio
+
+Difícil acesso a dados reais de emergências.
+
+Demonstração pouco realista.
+
+Criar dados sintéticos que simulem cenários reais (ex.: inundações, ciclones).
+
+R08
+
+Falha de segurança ou perda de dados
+
+Alto
+
+Falha técnica ou incidente de segurança.
+
+Perda de código e de progresso de desenvolvimento.
+
+Backups regulares em repositório Git privado.
+
+R09
+
+Conectividade instável à Internet
+
+Médio
+
+Infra-estrutura de rede pouco fiável.
+
+Dificuldade em reuniões, commits e testes.
+
+Planear atividades críticas em janelas de menor tráfego; prever trabalho offline.
+
+R10
+
+Falta de tempo para documentação
+
+Alto
+
+Prioridade dada ao desenvolvimento em detrimento dos relatórios.
+
+Documentação atrasada ou incompleta.
+
+Reservar tempo para documentação em cada Sprint; rever nas duas últimas semanas.
+
+ 
+
+Matriz de Dependência
+
+A matriz seguinte identifica as dependências entre as principais atividades e entregáveis do projeto.
+
+Actividade / Entregável
+
+Depende de
+
+Pré-requisito para
+
+Descrição da Dependência
+
+A1. Visão e Requisitos
+
+-
+
+A2, A3, A4, A6
+
+Define o problema e os stakeholders; base de todo o projeto (Elemento 1).
+
+A2. Elicitação e Modelação
+
+A1
+
+A3-A8
+
+Modela os 28 casos de uso que definem as funcionalidades a implementar (Elemento 2).
+
+A3. Planeamento (Cronograma, Riscos)
+
+A1, A2
+
+A4, A5, A6
+
+O cronograma e o plano de riscos apoiam-se na visão e nos casos de uso.
+
+A4. Metodologia (Scrum)
+
+A1, A2
+
+A5-A8
+
+Define como a equipa trabalha, afectando todas as fases seguintes.
+
+A5. Base de Dados
+
+A2
+
+A6-A8
+
+A estrutura de dados deve suportar todos os casos de uso identificados.
+
+A6. Back-end (API)
+
+A5, A2
+
+A7-A9
+
+A lógica de negócio expõe endpoints para os casos de uso (UC01, UC08, UC11, etc.).
+
+A7. Front-end (UI)
+
+A5, A6
+
+A8, A9
+
+A interface depende da API para consumir e enviar dados.
+
+A8. Testes de Integração
+
+A6, A7
+
+A9, A10
+
+Só é possível testar após todos os componentes estarem integrados.
+
+A9. Relatório Final
+
+A8
+
+-
+
+Consolida a visão, a modelação e o planeamento após validação do sistema.
+
+A10. Apresentação e Defesa
+
+A8, A9
+
+-
+
+Depende do sistema testado e documentado.
