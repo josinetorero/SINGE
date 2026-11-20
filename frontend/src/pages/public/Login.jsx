@@ -349,18 +349,12 @@ export function Login({ onLogin, authError = '' }) {
                 </button>
               </div>
 
-              <div>
-                <span className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300">
-                  Recuperação de palavra-passe indisponível na API.
-                </span>
-              </div>
             </form>
           )}
 
           {/* Rodapé institucional */}
           <div className="relative z-10 text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 pt-2">
-            <Radio className="w-3 h-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-            <span>Sistema Operacional de Emergência • INGD / CENOE</span>
+           
           </div>
         </div>
 
@@ -428,16 +422,12 @@ export function Login({ onLogin, authError = '' }) {
               {mode === 'register' ? 'Fazer Login' : 'Criar conta'}
             </button>
 
-            <p className="pt-4 text-xs text-slate-200/80 leading-relaxed">
-              A autenticação é validada pelo servidor SINGE. O acesso é concedido conforme o
-              perfil associado à sua conta.
-            </p>
+            
           </div>
 
           {/* Rodapé do painel direito */}
           <div className="relative z-10 text-[10px] text-slate-300/70 flex items-center gap-1.5">
-            <ShieldAlert className="w-3 h-3" />
-            <span>Ligação segura • TLS</span>
+           
           </div>
         </div>
       </div>
