@@ -352,12 +352,7 @@ class MissaoService
     private function autorizarOperacao(User $utilizador, Missao $missao, EstadoMissao $novoEstado): void
     {
         $perfil = $this->nomePerfil($utilizador);
-        if (in_array($perfil, self::PERFIS_GESTAO, true)) {
-            return;
-        }
-
         if ($perfil === 'Agente'
-            && $novoEstado !== EstadoMissao::CANCELADA
             && $utilizador->equipa_id !== null
             && (int) $utilizador->equipa_id === (int) $missao->equipa_id) {
             return;

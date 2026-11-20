@@ -17,6 +17,12 @@ export const agenteService = {
   async registarActividade(id, payload) {
     return dataOf(await api.post(`/missoes/${encodeURIComponent(id)}/actividades`, payload));
   },
+  async alterarEstado(id, estado) {
+    return dataOf(await api.patch(`/missoes/${encodeURIComponent(id)}/estado`, { estado }));
+  },
+  async cancelar(id) {
+    return dataOf(await api.post(`/missoes/${encodeURIComponent(id)}/cancelar`, {}));
+  },
 };
 
 export default agenteService;

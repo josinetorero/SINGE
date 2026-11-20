@@ -155,6 +155,28 @@ export function AgenteWorkspace({ user, onLogout }) {
     }
   };
 
+  const changeMissionStatus = async estado => {
+    if (!selected) return;
+    setBusy(true);
+    setError('');
+    try {
+      if (estado === 'cancelada') {
+        await agenteService.cancelar(selected.id);
+      } else {
+        await agenteService.alterarEstado(selected.id, estado);
+      }
+      setSelected(await agenteService.missao(selected.id));
+      await refresh();
+      toast.success(estado === 'cancelada'
+        ? 'Missão cancelada com sucesso.'
+        : 'Estado da missão actualizado com sucesso.');
+    } catch (requestError) {
+      setError(requestError.message || 'Não foi possível alterar o estado da missão.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const uploadEvidence = async () => {
     if (!selected || !evidenceFile) return;
     setBusy(true);
@@ -600,6 +622,7 @@ export function AgenteWorkspace({ user, onLogout }) {
                 setEvidenceFile={setEvidenceFile}
                 busy={busy}
                 onReport={reportActivity}
+                onStatusChange={changeMissionStatus}
                 onUploadEvidence={uploadEvidence}
                 onClose={() => setSelected(null)}
               />
@@ -615,7 +638,7 @@ export function AgenteWorkspace({ user, onLogout }) {
 /*                    MISSION DETAILS MODAL                  */
 /* ══════════════════════════════════════════════════════════ */
 
-function MissionDetails({ mission, observation, setObservation, evidenceFile, setEvidenceFile, busy, onReport, onUploadEvidence, onClose }) {
+function MissionDetails({ mission, observation, setObservation, evidenceFile, setEvidenceFile, busy, onReport, onStatusChange, onUploadEvidence, onClose }) {
   const status = mission.estado;
   const active = ACTIVE_STATES.includes(status);
 
@@ -762,6 +785,26 @@ function MissionDetails({ mission, observation, setObservation, evidenceFile, se
             {status === 'atribuida' && (
               <Button disabled={busy} onClick={() => onReport('conhecimento')} icon="CheckCircle">
                 Confirmar recepção
+              </Button>
+            )}
+            {status === 'atribuida' && (
+              <Button disabled={busy} onClick={() => onStatusChange('em_deslocacao')} icon="Navigation">
+                Em deslocação
+              </Button>
+            )}
+            {status === 'em_deslocacao' && (
+              <Button disabled={busy} onClick={() => onStatusChange('em_execucao')} icon="Activity">
+                Em execução
+              </Button>
+            )}
+            {status === 'em_execucao' && (
+              <Button disabled={busy} onClick={() => onStatusChange('concluida')} icon="CheckCircle">
+                Concluir missão
+              </Button>
+            )}
+            {active && (
+              <Button variant="secondary" disabled={busy} onClick={() => onStatusChange('cancelada')} icon="XCircle">
+                Cancelar missão
               </Button>
             )}
             {status === 'em_deslocacao' && (

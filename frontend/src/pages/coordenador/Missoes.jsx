@@ -13,21 +13,37 @@ function teamShortName(id) {
 export function CriarMissaoModal({ open, onClose }) {
   const toast = useToast();
   const [equipa, setEquipa] = useState('');
+  const [ocorrencia, setOcorrencia] = useState('');
+  const [objectivos, setObjectivos] = useState('');
+  const [dataInicio, setDataInicio] = useState('');
   const sel = EQUIPAS.find(e => e.id === equipa);
   const indisponivel = sel && sel.estado !== 'Disponível';
+
+  const limparFormulario = () => {
+    setEquipa('');
+    setOcorrencia('');
+    setObjectivos('');
+    setDataInicio('');
+  };
+
+  const fecharModal = () => {
+    limparFormulario();
+    onClose();
+  };
 
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={fecharModal}
       title="Criar nova missão"
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+          <Button variant="secondary" onClick={fecharModal}>Cancelar</Button>
           <Button
             icon="CheckCircle"
-            disabled={!equipa || !!indisponivel}
+            disabled={!ocorrencia || !objectivos.trim() || !equipa || !dataInicio || !!indisponivel}
             onClick={() => {
+              limparFormulario();
               onClose();
               toast.success('Missão criada com sucesso.');
             }}
@@ -39,9 +55,10 @@ export function CriarMissaoModal({ open, onClose }) {
     >
       <div className="space-y-4">
         <Field label="Ocorrência" required>
-          <select className={inputCls}>
+          <select value={ocorrencia} onChange={e => setOcorrencia(e.target.value)} className={inputCls}>
+            <option value="">Seleccionar ocorrência…</option>
             {OCORRENCIAS.filter(o => o.estado !== 'Resolvida').map(o => (
-              <option key={o.ref}>{o.ref} — {o.titulo}</option>
+              <option key={o.ref} value={o.ref}>{o.ref} — {o.titulo}</option>
             ))}
           </select>
         </Field>
@@ -49,6 +66,8 @@ export function CriarMissaoModal({ open, onClose }) {
         <Field label="Objectivos da intervenção" required>
           <textarea
             rows={3}
+            value={objectivos}
+            onChange={e => setObjectivos(e.target.value)}
             className={inputCls}
             placeholder="Descreva os objectivos principais…"
           />
@@ -80,7 +99,7 @@ export function CriarMissaoModal({ open, onClose }) {
         )}
 
         <Field label="Data e hora de início" required>
-          <input type="datetime-local" className={inputCls} />
+          <input type="datetime-local" value={dataInicio} onChange={e => setDataInicio(e.target.value)} className={inputCls} />
         </Field>
       </div>
     </Modal>

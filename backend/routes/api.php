@@ -117,7 +117,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/fatores-prioridade', [AvaliacaoPrioridadeController::class, 'factors'])->name('fatores-prioridade.index');
         Route::post('/missoes', [MissaoController::class, 'store'])->name('missoes.store');
         Route::patch('/missoes/{missao}/equipa', [MissaoController::class, 'reassignTeam'])->name('missoes.team.update');
-        Route::post('/missoes/{missao}/cancelar', [MissaoController::class, 'cancel'])->name('missoes.cancel');
         Route::post('/notificacoes/para/{destinatario}', [NotificacaoController::class, 'send'])->name('notificacoes.send');
         Route::post('/alertas-publicos', [AlertaPublicoController::class, 'store'])->name('alertas-publicos.store');
         Route::put('/alertas-publicos/{alertaPublico}', [AlertaPublicoController::class, 'update'])->name('alertas-publicos.update');
@@ -150,9 +149,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/equipas/{equipa}/localizacao', [EquipaController::class, 'updateLocation'])->name('equipas.location');
     });
 
-    Route::middleware('perfil:Administrador,Coordenador,Agente')->group(function (): void {
+    Route::middleware('perfil:Agente')->group(function (): void {
         Route::patch('/missoes/{missao}/estado', [MissaoController::class, 'updateState'])->name('missoes.state');
         Route::post('/missoes/{missao}/concluir', [MissaoController::class, 'complete'])->name('missoes.complete');
+        Route::post('/missoes/{missao}/cancelar', [MissaoController::class, 'cancel'])->name('missoes.cancel');
     });
 
     Route::middleware('perfil:Agente')->post('/missoes/{missao}/actividades', [MissaoController::class, 'storeActivity'])

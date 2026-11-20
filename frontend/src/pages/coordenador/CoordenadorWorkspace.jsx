@@ -362,6 +362,7 @@ export function CoordenadorWorkspace({ user, onLogout }) {
 
   const submitMission = async event => {
     event.preventDefault();
+    const formElement = event.currentTarget;
     const form = new FormData(event.currentTarget);
     const payload = Object.fromEntries(form.entries());
     payload.ocorrencia_id = Number(payload.ocorrencia_id);
@@ -371,6 +372,7 @@ export function CoordenadorWorkspace({ user, onLogout }) {
     try {
       const created = await coordenadorService.createMission(payload);
       toast.success('Missão criada e equipa atribuída.');
+      formElement.reset();
       await Promise.all([openMission(created.id), loadMissions(), loadDashboard(), loadTeams()]);
     } catch (requestError) {
       setError(requestError instanceof ValidationError
@@ -894,19 +896,6 @@ export function CoordenadorWorkspace({ user, onLogout }) {
                   {teams.filter(team => team.estado === 'disponivel' && team.id !== selectedMission.equipa_id).map(team => <option value={team.id} key={team.id}>{team.nome}</option>)}
                 </select>
               </Field>
-            )}
-
-            {user.role !== 'administrador' && (
-              <div className="flex flex-wrap gap-2 pt-2 border-t border-bd dark:border-dborder">
-                {MISSION_STATES.map(state => (
-                  <button key={state} className="rounded-lg border border-bd dark:border-dborder px-2.5 py-1.5 text-xs font-medium hover:bg-light dark:hover:bg-dsidebar disabled:opacity-40 transition-colors" disabled={busy || selectedMission.estado === state || ['concluida', 'cancelada'].includes(selectedMission.estado)} onClick={() => actOnMission(`estado:${state}`)}>
-                    {state}
-                  </button>
-                ))}
-                <button className="rounded-lg border border-red-300 dark:border-red-900 px-2.5 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/30 disabled:opacity-40 transition-colors" disabled={busy || ['concluida', 'cancelada'].includes(selectedMission.estado)} onClick={() => actOnMission('cancelar')}>
-                  Cancelar
-                </button>
-              </div>
             )}
 
             <div>

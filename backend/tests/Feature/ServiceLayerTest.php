@@ -302,13 +302,16 @@ it('não atribui missões a equipas indisponíveis e mantém estados coerentes',
         'equipa_id' => $team->id,
     ], $coordinator);
     expect($team->fresh()->estado)->toBe(EstadoEquipa::EM_MISSAO);
+    $agent = singeUserWithProfile('Agente');
+    $agent->equipa_id = $team->id;
+    $agent->save();
 
     expect(fn () => $service->concluir($mission, $coordinator))
-        ->toThrow(InvalidArgumentException::class, 'Transição de missão inválida');
+        ->toThrow(AuthorizationException::class, 'não está autorizado');
 
-    $service->atualizarEstado($mission, EstadoMissao::EM_DESLOCACAO->value, $coordinator);
-    $service->atualizarEstado($mission, EstadoMissao::EM_EXECUCAO->value, $coordinator);
-    $completed = $service->concluir($mission, $coordinator);
+    $service->atualizarEstado($mission, EstadoMissao::EM_DESLOCACAO->value, $agent);
+    $service->atualizarEstado($mission, EstadoMissao::EM_EXECUCAO->value, $agent);
+    $completed = $service->concluir($mission, $agent);
 
     expect($completed->estado)->toBe(EstadoMissao::CONCLUIDA)
         ->and($team->fresh()->estado)->toBe(EstadoEquipa::DISPONIVEL);
@@ -333,8 +336,11 @@ it('cancela uma missão activa e repõe a disponibilidade da equipa', function (
         'ocorrencia_id' => $incident->id,
         'equipa_id' => $team->id,
     ], $coordinator);
+    $agent = singeUserWithProfile('Agente');
+    $agent->equipa_id = $team->id;
+    $agent->save();
 
-    $cancelled = $service->cancelar($mission, $coordinator);
+    $cancelled = $service->cancelar($mission, $agent);
 
     expect($cancelled->estado)->toBe(EstadoMissao::CANCELADA)
         ->and($team->fresh()->estado)->toBe(EstadoEquipa::DISPONIVEL);

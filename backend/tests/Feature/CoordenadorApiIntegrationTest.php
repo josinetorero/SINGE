@@ -108,8 +108,8 @@ it('binds a mission to the authenticated coordinator and records mission history
 
     $this->actingAs($coordinator, 'sanctum')
         ->patchJson('/api/missoes/'.$mission['id'].'/estado', ['estado' => EstadoMissao::EM_DESLOCACAO->value])
-        ->assertOk();
-    expect(HistoricoMissao::query()->where('missao_id', $mission['id'])->count())->toBe(2);
+        ->assertForbidden();
+    expect(HistoricoMissao::query()->where('missao_id', $mission['id'])->count())->toBe(1);
 });
 
 it('allows an agent to execute and report only missions assigned to their own team', function () {
@@ -191,5 +191,5 @@ it('allows an agent to execute and report only missions assigned to their own te
         'operacao' => 'progresso',
         'observacoes' => 'Tentativa sem autorização.',
     ])->assertForbidden();
-    $this->actingAs($agent, 'sanctum')->postJson('/api/missoes/'.$mission->id.'/cancelar')->assertForbidden();
+    $this->actingAs($agent, 'sanctum')->postJson('/api/missoes/'.$mission->id.'/cancelar')->assertUnprocessable();
 });
