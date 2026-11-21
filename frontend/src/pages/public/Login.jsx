@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   User,
   Lock,
-  ArrowLeftRight,
   Eye,
   EyeOff,
   ShieldAlert,
@@ -11,12 +10,16 @@ import {
   Radio,
   AlertCircle,
   ShieldCheck,
+  Mail,
+  ArrowRight,
+  Building2,
+  Lock as LockIcon,
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 
-// Input pill reutilizável (mantém o estilo original, mas centraliza a lógica)
-function PillInput({
+// Input institucional (reto, com borda e ícone)
+function Field({
   icon: IconCmp,
   label,
   type = 'text',
@@ -26,24 +29,45 @@ function PillInput({
   autoComplete,
   required,
   invalid,
+  error,
   trailing,
+  hint,
 }) {
   return (
-    <div className="w-full bg-white/85 dark:bg-white/10 backdrop-blur-md rounded-full px-4 py-2.5 sm:py-3 flex items-center border border-white/80 dark:border-white/10 shadow-sm focus-within:ring-2 focus-within:ring-brand/40 focus-within:bg-white dark:focus-within:bg-white/15 transition-all">
-      <IconCmp className="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" />
-      <div className="w-px h-4 bg-slate-400/60 dark:bg-slate-500/60 mx-3 shrink-0" />
-      <input
-        type={type}
-        aria-label={label}
-        aria-invalid={invalid || undefined}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        required={required}
-        className="bg-transparent flex-1 text-xs sm:text-sm outline-none text-slate-800 dark:text-white placeholder:text-slate-500 font-medium"
-      />
-      {trailing}
+    <div>
+      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+        {label}
+        {required && <span className="text-red-500 ml-0.5">*</span>}
+      </label>
+      <div
+        className={`w-full flex items-center rounded-lg bg-white dark:bg-slate-900/60 border transition-colors ${
+          invalid
+            ? 'border-red-400 dark:border-red-700 focus-within:ring-2 focus-within:ring-red-200 dark:focus-within:ring-red-900/40'
+            : 'border-slate-300 dark:border-slate-700 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20'
+        }`}
+      >
+        <span className="pl-3.5 text-slate-400 dark:text-slate-500">
+          <IconCmp className="w-4 h-4" />
+        </span>
+        <input
+          type={type}
+          aria-label={label}
+          aria-invalid={invalid || undefined}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          required={required}
+          className="flex-1 bg-transparent px-3 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 outline-none"
+        />
+        {trailing && <span className="pr-2">{trailing}</span>}
+      </div>
+      {hint && !error && (
+        <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{hint}</p>
+      )}
+      {error && (
+        <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>
+      )}
     </div>
   );
 }
@@ -69,8 +93,8 @@ export function Login({ onLogin, authError = '' }) {
     if (authError) setError(authError);
   }, [authError]);
 
-  const handleToggleMode = () => {
-    setMode(prev => (prev === 'login' ? 'register' : 'login'));
+  const switchMode = (next) => {
+    setMode(next);
     setError('');
     setFieldErrors({});
     clearAuthError();
@@ -115,332 +139,330 @@ export function Login({ onLogin, authError = '' }) {
     }
   };
 
+  const showPasswordToggle = (
+    <button
+      type="button"
+      onClick={() => setShowPass(!showPass)}
+      aria-label={showPass ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'}
+      className="p-1.5 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+    >
+      {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+    </button>
+  );
+
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#E9EEF5] dark:bg-[#0B1220] transition-colors duration-300 overflow-hidden font-sans">
-      {/* Formas de fundo institucionais */}
-      {/* 1. Arco azul-institucional no topo esquerdo */}
-      <div
-        className="absolute -top-24 -left-24 w-80 sm:w-[28rem] h-80 sm:h-[28rem] rounded-full opacity-50 dark:opacity-20 pointer-events-none blur-sm"
-        style={{
-          background: 'radial-gradient(circle, #2B6079 0%, #1D4ED8 55%, transparent 100%)',
-        }}
-      />
-
-      {/* 2. Forma orgânica verde INGD no canto inferior esquerdo */}
-      <div
-        className="absolute -bottom-10 left-8 sm:left-24 w-52 sm:w-80 h-44 sm:h-64 rounded-[40px] rotate-[15deg] opacity-70 dark:opacity-25 pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, #15803d 0%, #0f766e 100%)',
-          clipPath: 'polygon(0% 0%, 100% 30%, 80% 100%, 10% 90%)',
-        }}
-      />
-
-      {/* 3. Painel geométrico navy à direita */}
-      <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-[480px] sm:w-[650px] h-[85vh] rounded-[48px] bg-[#1e3a5f] dark:bg-[#0f1b2e] opacity-30 dark:opacity-50 pointer-events-none hidden md:block" />
-
-      {/* Topo: logo + tema */}
-      <header className="absolute top-4 left-4 sm:top-6 sm:left-8 z-30 flex items-center gap-2.5">
-        <div className="w-9 h-9 rounded-xl bg-brand text-white flex items-center justify-center shadow-md shadow-brand/30">
-          <ShieldAlert className="w-5 h-5 text-white" />
-        </div>
-        <div>
-          <span className="font-extrabold text-base tracking-wider text-navy dark:text-white">SINGE</span>
-          <span className="hidden sm:inline-block text-[11px] text-slate-500 dark:text-slate-400 ml-2 border-l border-slate-300 dark:border-slate-700 pl-2">
-            Gestão de Emergências • Moçambique
-          </span>
-        </div>
-      </header>
-
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-30 flex items-center gap-2">
-        <button
-          onClick={toggleTheme}
-          type="button"
-          aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo escuro'}
-          className="p-2.5 rounded-full bg-white/80 dark:bg-dcard/80 backdrop-blur-md shadow-md text-slate-700 dark:text-slate-200 hover:scale-105 active:scale-95 transition-all border border-slate-200/50 dark:border-white/10"
-        >
-          {theme === 'dark' ? (
-            <Sun className="w-4 h-4 text-amber-400" />
-          ) : (
-            <Moon className="w-4 h-4 text-slate-700" />
-          )}
-        </button>
-      </div>
-
-      {/* Cartão dual-panel */}
-      <div className="relative w-full max-w-[880px] min-h-[480px] sm:min-h-[510px] rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-[0_20px_50px_rgba(16,42,67,0.18)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.55)] border border-white/60 dark:border-white/10 grid grid-cols-1 md:grid-cols-12 z-20 transition-all duration-300">
-        {/* ======================= PAINEL ESQUERDO ======================= */}
-        <div
-          className="md:col-span-7 p-7 sm:p-10 lg:p-12 flex flex-col justify-between relative overflow-hidden backdrop-blur-xl transition-all duration-300"
-          style={{
-            background:
-              theme === 'dark'
-                ? 'linear-gradient(135deg, rgba(22, 34, 53, 0.95) 0%, rgba(16, 26, 42, 0.93) 50%, rgba(12, 20, 34, 0.97) 100%)'
-                : 'linear-gradient(135deg, #DDE9EE 0%, #E7F0F3 40%, #CFE0E6 75%, #B9D3DA 100%)',
-          }}
-        >
-          <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/30 dark:from-white/5 to-transparent pointer-events-none" />
-
-          {/* Cabeçalho */}
-          <div className="relative z-10">
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy dark:text-white leading-none">
-              {mode === 'register' ? 'Criar Conta' : 'Faça Login'}
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1.5 font-medium">
-              {mode === 'register'
-                ? 'Registe-se como Cidadão para aceder aos serviços disponíveis na plataforma.'
-                : 'Aceda à plataforma de coordenação e resposta a emergências.'}
-            </p>
-          </div>
-
-          {/* Alerta de erro */}
-          {error && (
-            <div
-              role="alert"
-              className="relative z-10 my-2 p-3 rounded-xl bg-red-100/80 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-xs border border-red-200 dark:border-red-800 flex items-start gap-2"
-            >
-              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-              <div className="min-w-0">
-                <p className="font-semibold">{error}</p>
-                {Object.entries(fieldErrors).length > 0 && (
-                  <ul className="mt-1 list-disc pl-4 space-y-0.5">
-                    {Object.entries(fieldErrors).map(([field, message]) => (
-                      <li key={field}>{message}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+    <div className="min-h-screen flex flex-col bg-slate-100 dark:bg-[#0a1320] font-sans">
+      {/* Barra superior institucional */}
+      <header className="w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f1b2e]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-brand text-white flex items-center justify-center shadow-sm">
+              <ShieldAlert className="w-5 h-5" />
             </div>
-          )}
-
-          {/* Formulários */}
-          {mode === 'register' ? (
-            <form onSubmit={handleRegisterSubmit} className="relative z-10 space-y-3.5 my-5" aria-busy={loading}>
-              <PillInput
-                icon={User}
-                label="Nome completo"
-                value={regNome}
-                onChange={(e) => setRegNome(e.target.value)}
-                placeholder="nome completo"
-                autoComplete="name"
-                required
-                invalid={Boolean(fieldErrors.name)}
-              />
-              <PillInput
-                icon={User}
-                label="Email"
-                type="email"
-                value={regEmail}
-                onChange={(e) => setRegEmail(e.target.value)}
-                placeholder="e-mail institucional ou pessoal"
-                autoComplete="email"
-                required
-                invalid={Boolean(fieldErrors.email)}
-              />
-              <PillInput
-                icon={Lock}
-                label="Palavra-passe"
-                type={showPass ? 'text' : 'password'}
-                value={regPass}
-                onChange={(e) => setRegPass(e.target.value)}
-                placeholder="definir palavra-passe"
-                autoComplete="new-password"
-                required
-                invalid={Boolean(fieldErrors.password)}
-                trailing={
-                  <button
-                    type="button"
-                    aria-label={showPass ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'}
-                    onClick={() => setShowPass(!showPass)}
-                    className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 p-1 transition-colors"
-                  >
-                    {showPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                  </button>
-                }
-              />
-              <PillInput
-                icon={Lock}
-                label="Confirmar palavra-passe"
-                type="password"
-                value={regPassConfirmation}
-                onChange={(e) => setRegPassConfirmation(e.target.value)}
-                placeholder="confirmar palavra-passe"
-                autoComplete="new-password"
-                required
-              />
-
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-8 py-2.5 rounded-full bg-gradient-to-r from-brand to-navy text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all inline-flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
-                >
-                  {loading ? (
-                    <>
-                      <span className="w-3.5 h-3.5 rounded-full border-2 border-white/60 border-t-white animate-spin" />
-                      A criar conta…
-                    </>
-                  ) : (
-                    'Registar e Aceder'
-                  )}
-                </button>
-              </div>
-            </form>
-          ) : (
-            <form onSubmit={handleLoginSubmit} className="relative z-10 space-y-4 my-5 sm:my-7" aria-busy={loading}>
-              <PillInput
-                icon={User}
-                label="Email"
-                type="email"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="e-mail"
-                autoComplete="username"
-                required
-                invalid={Boolean(fieldErrors.email)}
-              />
-              <PillInput
-                icon={Lock}
-                label="Palavra-passe"
-                type={showPass ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="senha"
-                autoComplete="current-password"
-                required
-                invalid={Boolean(fieldErrors.password)}
-                trailing={
-                  <button
-                    type="button"
-                    onClick={() => setShowPass(!showPass)}
-                    aria-label={showPass ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'}
-                    className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 p-1 transition-colors"
-                  >
-                    {showPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                  </button>
-                }
-              />
-
-              <div className="flex items-center gap-2 pl-1">
-                <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 dark:text-slate-300 font-medium">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(event) => setRememberMe(event.target.checked)}
-                    className="w-4 h-4 rounded text-brand focus:ring-brand"
-                  />
-                  <span>Lembrar de mim</span>
-                </label>
-              </div>
-
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-9 py-2.5 rounded-full bg-gradient-to-r from-brand to-navy text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all inline-flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
-                >
-                  {loading ? (
-                    <>
-                      <span className="w-3.5 h-3.5 rounded-full border-2 border-white/60 border-t-white animate-spin" />
-                      A autenticar…
-                    </>
-                  ) : (
-                    'Entrar'
-                  )}
-                </button>
-              </div>
-
-              <div>
-                <span className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300">
-                  Recuperação de palavra-passe indisponível na API.
-                </span>
-              </div>
-            </form>
-          )}
-
-          {/* Rodapé institucional */}
-          <div className="relative z-10 text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 pt-2">
-            <Radio className="w-3 h-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-            <span>Sistema Operacional de Emergência • INGD / CENOE</span>
-          </div>
-        </div>
-
-        {/* Botão central flutuante */}
-        <div className="hidden md:flex absolute top-1/2 left-[58.333%] -translate-x-1/2 -translate-y-1/2 z-30">
-          <button
-            type="button"
-            onClick={handleToggleMode}
-            className="w-11 h-11 rounded-full bg-white dark:bg-dcard shadow-xl border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 active:scale-90 hover:text-brand dark:hover:text-blue-400 transition-all cursor-pointer group"
-            title="Alternar entre Entrar e Criar Conta"
-            aria-label="Alternar entre entrar e criar conta"
-          >
-            <ArrowLeftRight className="w-5 h-5 transition-transform group-hover:rotate-180 duration-300" />
-          </button>
-        </div>
-
-        {/* ======================= PAINEL DIREITO ======================= */}
-        <div className="md:col-span-5 p-7 sm:p-10 flex flex-col justify-between items-center text-center bg-gradient-to-br from-[#1e3a5f] via-navy to-[#0f1b2e] text-white relative overflow-hidden transition-all duration-300">
-          {/* Efeitos de luz */}
-          <div className="absolute -top-12 -right-12 w-48 h-48 bg-brand/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
-
-          {/* Topo */}
-          <div className="w-full relative z-10 pt-2">
-            <h2
-              className="text-3xl sm:text-4xl font-black tracking-wide leading-none"
-              style={{
-                WebkitTextStroke: '1.2px rgba(96, 165, 250, 0.85)',
-                color: 'transparent',
-              }}
-            >
-              Bem Vindo
-            </h2>
-
-            <div className="mt-3 flex flex-col items-center">
-              <p className="text-xl sm:text-2xl tracking-tight text-white flex items-center gap-2">
-                <span className="font-normal text-slate-100">
-                  {mode === 'register' ? 'Já tem' : 'Novo'}
-                </span>
-                <span className="font-extrabold relative inline-block text-white">
-                  {mode === 'register' ? 'Conta' : 'Login'}
-                  <span className="absolute left-0 -bottom-1 w-full h-[3px] bg-brand rounded-full" />
-                </span>
+            <div className="leading-tight">
+              <p className="font-bold text-sm tracking-wider text-navy dark:text-white">
+                SINGE
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Sistema Integrado de Gestão de Emergências
               </p>
             </div>
           </div>
 
-          {/* Centro */}
-          <div className="w-full relative z-10 my-6 space-y-4">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/10 border border-white/20 mx-auto">
-              <ShieldCheck className="w-6 h-6 text-white/90" />
-            </div>
-
-            <p className="text-xs text-slate-200/90 font-medium">
-              {mode === 'register'
-                ? 'Possui credenciais de acesso?'
-                : 'Não tem uma conta?'}
-            </p>
-
+          <div className="flex items-center gap-3">
+            <span className="hidden md:inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <Building2 className="w-3.5 h-3.5" />
+              INGD · CENOE
+            </span>
             <button
+              onClick={toggleTheme}
               type="button"
-              onClick={handleToggleMode}
-              className="px-6 py-2 rounded-full bg-white/15 hover:bg-white/25 text-white font-semibold text-xs backdrop-blur-md border border-white/25 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo escuro'}
+              className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
-              {mode === 'register' ? 'Fazer Login' : 'Criar conta'}
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-
-            <p className="pt-4 text-xs text-slate-200/80 leading-relaxed">
-              A autenticação é validada pelo servidor SINGE. O acesso é concedido conforme o
-              perfil associado à sua conta.
-            </p>
-          </div>
-
-          {/* Rodapé do painel direito */}
-          <div className="relative z-10 text-[10px] text-slate-300/70 flex items-center gap-1.5">
-            <ShieldAlert className="w-3 h-3" />
-            <span>Ligação segura • TLS</span>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Conteúdo principal */}
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-10">
+        <div className="w-full max-w-5xl grid lg:grid-cols-2 rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f1b2e]">
+          {/* Painel esquerdo — informação institucional pública */}
+          <aside className="hidden lg:flex flex-col justify-between p-10 bg-gradient-to-br from-[#1e3a5f] via-navy to-[#0f1b2e] text-white relative">
+            {/* Grelha de fundo sutil */}
+            <div
+              className="absolute inset-0 opacity-[0.07] pointer-events-none"
+              style={{
+                backgroundImage:
+                  'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)',
+                backgroundSize: '32px 32px',
+              }}
+            />
+
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[11px] font-medium tracking-wide uppercase">
+                <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
+                Plataforma oficial
+              </div>
+
+              <h1 className="mt-6 text-3xl font-bold leading-tight">
+                Comunique ocorrências e acompanhe a resposta às emergências
+              </h1>
+              <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+                Registe situações de emergência, acompanhe o estado das suas comunicações
+                e receba alertas oficiais das autoridades.
+              </p>
+            </div>
+
+            {/* Funcionalidades públicas (sem revelar perfis) */}
+            <div className="relative z-10 space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-md bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Comunicação segura</p>
+                  <p className="text-xs text-slate-400">
+                    Os seus dados são protegidos e as comunicações validadas pelas autoridades.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-md bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
+                  <LockIcon className="w-4 h-4 text-blue-300" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Ligação cifrada</p>
+                  <p className="text-xs text-slate-400">
+                    Comunicação protegida por TLS. Apenas pessoal autorizado acede aos detalhes.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10 pt-6 border-t border-white/10 text-[11px] text-slate-400 flex items-center gap-1.5">
+              <ShieldAlert className="w-3 h-3" />
+              Acesso seguro · INGD / CENOE · Moçambique
+            </div>
+          </aside>
+
+          {/* Painel direito — formulário */}
+          <section className="p-8 sm:p-10 lg:p-12 flex flex-col justify-center">
+            {/* Tabs de modo */}
+            <div className="flex p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60 mb-6">
+              <button
+                type="button"
+                onClick={() => switchMode('login')}
+                className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${
+                  mode === 'login'
+                    ? 'bg-white dark:bg-slate-900 text-navy dark:text-white shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                }`}
+              >
+                Entrar
+              </button>
+              <button
+                type="button"
+                onClick={() => switchMode('register')}
+                className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${
+                  mode === 'register'
+                    ? 'bg-white dark:bg-slate-900 text-navy dark:text-white shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                }`}
+              >
+                Registar
+              </button>
+            </div>
+
+            {/* Cabeçalho do formulário */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-navy dark:text-white">
+                {mode === 'register' ? 'Criar conta de cidadão' : 'Iniciar sessão'}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                {mode === 'register'
+                  ? 'Registe-se gratuitamente para comunicar ocorrências e acompanhar o estado das mesmas.'
+                  : 'Introduza as suas credenciais de acesso.'}
+              </p>
+            </div>
+
+            {/* Erro */}
+            {error && (
+              <div
+                role="alert"
+                className="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-sm text-red-700 dark:text-red-300 flex items-start gap-2"
+              >
+                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-semibold">{error}</p>
+                  {Object.entries(fieldErrors).length > 0 && (
+                    <ul className="mt-1 list-disc pl-4 space-y-0.5 text-xs">
+                      {Object.entries(fieldErrors).map(([field, message]) => (
+                        <li key={field}>{message}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Formulário */}
+            {mode === 'login' ? (
+              <form onSubmit={handleLoginSubmit} className="space-y-4" aria-busy={loading}>
+                <Field
+                  icon={Mail}
+                  label="Email"
+                  type="email"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="nome@exemplo.mz"
+                  autoComplete="username"
+                  required
+                  invalid={Boolean(fieldErrors.email)}
+                  error={fieldErrors.email}
+                />
+                <Field
+                  icon={Lock}
+                  label="Palavra-passe"
+                  type={showPass ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+                  invalid={Boolean(fieldErrors.password)}
+                  error={fieldErrors.password}
+                  trailing={showPasswordToggle}
+                />
+
+                <div className="flex items-center justify-between pt-1">
+                  <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-600 dark:text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(event) => setRememberMe(event.target.checked)}
+                      className="w-4 h-4 rounded border-slate-300 text-brand focus:ring-brand"
+                    />
+                    <span>Manter sessão iniciada</span>
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-brand hover:bg-brand/90 text-white text-sm font-semibold py-2.5 px-4 shadow-sm transition-colors disabled:opacity-70 disabled:cursor-wait"
+                >
+                  {loading ? (
+                    <>
+                      <span className="w-4 h-4 rounded-full border-2 border-white/60 border-t-white animate-spin" />
+                      A autenticar…
+                    </>
+                  ) : (
+                    <>
+                      Entrar
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleRegisterSubmit} className="space-y-3.5" aria-busy={loading}>
+                <Field
+                  icon={User}
+                  label="Nome completo"
+                  value={regNome}
+                  onChange={(e) => setRegNome(e.target.value)}
+                  placeholder="Nome e apelido"
+                  autoComplete="name"
+                  required
+                  invalid={Boolean(fieldErrors.name)}
+                  error={fieldErrors.name}
+                />
+                <Field
+                  icon={Mail}
+                  label="Email"
+                  type="email"
+                  value={regEmail}
+                  onChange={(e) => setRegEmail(e.target.value)}
+                  placeholder="nome@exemplo.mz"
+                  autoComplete="email"
+                  required
+                  invalid={Boolean(fieldErrors.email)}
+                  error={fieldErrors.email}
+                />
+                <Field
+                  icon={Lock}
+                  label="Palavra-passe"
+                  type={showPass ? 'text' : 'password'}
+                  value={regPass}
+                  onChange={(e) => setRegPass(e.target.value)}
+                  placeholder="Mínimo 8 caracteres"
+                  autoComplete="new-password"
+                  required
+                  invalid={Boolean(fieldErrors.password)}
+                  error={fieldErrors.password}
+                  trailing={showPasswordToggle}
+                  hint="Use pelo menos 8 caracteres."
+                />
+                <Field
+                  icon={Lock}
+                  label="Confirmar palavra-passe"
+                  type="password"
+                  value={regPassConfirmation}
+                  onChange={(e) => setRegPassConfirmation(e.target.value)}
+                  placeholder="Repita a palavra-passe"
+                  autoComplete="new-password"
+                  required
+                  invalid={Boolean(fieldErrors.password_confirmation)}
+                  error={fieldErrors.password_confirmation}
+                />
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-brand hover:bg-brand/90 text-white text-sm font-semibold py-2.5 px-4 shadow-sm transition-colors disabled:opacity-70 disabled:cursor-wait"
+                >
+                  {loading ? (
+                    <>
+                      <span className="w-4 h-4 rounded-full border-2 border-white/60 border-t-white animate-spin" />
+                      A criar conta…
+                    </>
+                  ) : (
+                    <>
+                      Criar conta
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed pt-1">
+                  Ao criar conta declara que as informações fornecidas são verdadeiras.
+                  Após o registo, poderá comunicar ocorrências e acompanhar o estado
+                  das mesmas na plataforma.
+                </p>
+              </form>
+            )}
+
+            <p className="mt-6 text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              Ao continuar, declara que tem autorização para acessar o sistema e que as suas
+              acções serão registadas em auditoria.
+            </p>
+          </section>
+        </div>
+      </main>
+
+      {/* Rodapé institucional */}
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f1b2e]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+          <span>© {new Date().getFullYear()} INGD · CENOE · República de Moçambique</span>
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+            Ligação segura · TLS 1.3
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
